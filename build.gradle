@@ -1,0 +1,100 @@
+/*
+ * This file is part of the DITA Open Toolkit project.
+ *
+ * Copyright 2015 Jarno Elovirta
+ *
+ * See the accompanying LICENSE file for applicable license.
+ */
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'org.dita-ot.index'
+
+description = """DITA Open Toolkit indexing plug-in."""
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+dependencies {
+    compile group: "org.dita-ot", name: "dost", version: "[2.1,)"
+}
+/*
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+*/
+
+jar.archiveName = "${project.name}.jar"
+jar.include "com/idiominc/**"
+jar.include "com/suite/**"
+jar.include "org/dita/dost/pdf2/**"
+
+task copyInstall(type: Copy) {
+    from (configurations.runtime.allArtifacts.files)
+    destinationDir = file("lib")
+}
+
+//task copyDistTemp(type: Copy) {
+//    from (configurations.runtime.allArtifacts.files) {
+//        into "plugins/org.dita.index/lib"
+//    }
+//    destinationDir = file("${rootProject.buildDir}/tmp/dist")
+//}
+
+task dist(type: Zip) {
+    from(configurations.runtime.allArtifacts.files) {
+        into "lib"
+    }
+//    from(configurations.runtime) {
+//        include { details -> details.file.name.contains('flexmark') }
+//        exclude { details -> details.file.name.contains('flexmark-all') }
+//        exclude { details -> details.file.name.contains('flexmark-ext-emoji') }
+//        exclude { details -> details.file.name.contains('flexmark-ext-gfm-issues') }
+//        exclude { details -> details.file.name.contains('flexmark-ext-gfm-users') }
+//        exclude { details -> details.file.name.contains('flexmark-ext-xwiki-macros') }
+//        exclude { details -> details.file.name.contains('flexmark-pdf') }
+//        include { details -> details.file.name.contains('autolink') }
+//        include { details -> details.file.name.contains('htmlparser') }
+//        into "lib"
+//    }
+    from("src/main") {
+        include "plugin.xml"
+        expand(
+                id: project.name,
+                version: project.version
+        )
+    }
+    from("src/main") {
+        include "build-*_template.xml"
+        include "conductor.xml"
+        // Template generated files
+        exclude "build.xml"
+    }
+    from("src/main/resources") {
+        include "*.xsl"
+        exclude "specialize.xsl"
+        // Template generated files
+        exclude "dita2markdown.xsl"
+        exclude "map2markdown-cover.xsl"
+        rename '(.*)', 'xsl/$1'
+    }
+//    from("licenses") {
+//        include "*.txt"
+//        into "lib"
+//    }
+//    from(".") {
+//        include "LICENSE"
+//    }
+//    from(".") {
+//        include "NOTICES"
+//        expand(
+//                year: new Date().format('yyyy')
+//        )
+//    }
+    archiveName "${project.name}-${project.version}.zip"
+}
