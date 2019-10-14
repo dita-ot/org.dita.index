@@ -14,7 +14,7 @@
   <extension-point id="dita.conductor.pdf2.formatter.check" name="Formatter check"/>
   -->
   <!-- extensions -->
-  <feature extension="dita.conductor.lib.import" file="lib/index.jar"/>
+  <feature extension="dita.conductor.lib.import" file="lib/${jar}"/>
   <feature extension="ant.import" file="build.xml"/>
   <!--
   <feature extension="dita.xsl.messages" file="resource/messages.xml"/>

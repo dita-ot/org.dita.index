@@ -9,7 +9,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 group = 'org.dita-ot.index'
-
+version = '1.0.0'
 description = """DITA Open Toolkit indexing plug-in."""
 
 repositories {
@@ -19,20 +19,21 @@ repositories {
 dependencies {
     compile group: "org.dita-ot", name: "dost", version: "[2.1,)"
 }
-/*
+
 sourceSets {
     main {
-        java {
-            srcDir 'src'
+        resources {
+            exclude 'build.xml'
+            exclude 'catalog_template.xml'
+            exclude 'i18n/*'
+            exclude 'messages.xml'
+            exclude 'plugin.xml'
+            exclude 'xsl/*'
         }
     }
 }
-*/
 
-jar.archiveName = "${project.name}.jar"
-jar.include "com/idiominc/**"
-jar.include "com/suite/**"
-jar.include "org/dita/dost/pdf2/**"
+jar.setArchiveName "${project.name}.jar"
 
 task copyInstall(type: Copy) {
     from (configurations.runtime.allArtifacts.files)
@@ -62,39 +63,22 @@ task dist(type: Zip) {
 //        include { details -> details.file.name.contains('htmlparser') }
 //        into "lib"
 //    }
-    from("src/main") {
+    from("src/main/resources") {
         include "plugin.xml"
         expand(
-                id: project.name,
-                version: project.version
+                version: project.version,
+                jar: jar.archiveName
         )
     }
-    from("src/main") {
-        include "build-*_template.xml"
-        include "conductor.xml"
-        // Template generated files
-        exclude "build.xml"
-    }
     from("src/main/resources") {
-        include "*.xsl"
-        exclude "specialize.xsl"
-        // Template generated files
-        exclude "dita2markdown.xsl"
-        exclude "map2markdown-cover.xsl"
-        rename '(.*)', 'xsl/$1'
+        include "build.xml"
+        include "catalog_template.xml"
+        include "messages.xml"
+        include "xsl/*.xsl"
+//        rename '(.*)', 'xsl/$1'
     }
-//    from("licenses") {
-//        include "*.txt"
-//        into "lib"
-//    }
-//    from(".") {
-//        include "LICENSE"
-//    }
-//    from(".") {
-//        include "NOTICES"
-//        expand(
-//                year: new Date().format('yyyy')
-//        )
-//    }
+    from(".") {
+        include "LICENSE"
+    }
     archiveName "${project.name}-${project.version}.zip"
 }
