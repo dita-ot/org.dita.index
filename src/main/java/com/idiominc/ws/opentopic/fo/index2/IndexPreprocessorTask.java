@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Locale;
 
 /*
@@ -96,7 +97,7 @@ public class IndexPreprocessorTask extends Task {
         final IndexPreprocessResult result = preprocessor.process(doc);
         final Document resultDoc = result.document;
 
-        final IndexEntry[] indexEntries = result.indexEntries;
+        final Collection<IndexEntry> indexEntries = result.indexEntries;
         preprocessor.createAndAddIndexGroups(indexEntries, configuration, resultDoc, locale);
         if (processingFaild) {
             setActiveProjectProperty("ws.runtime.index.preprocess.fail", "true");

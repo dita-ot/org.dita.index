@@ -2,6 +2,8 @@ package com.idiominc.ws.opentopic.fo.index2.configuration;
 
 import com.idiominc.ws.opentopic.fo.index2.IndexCollator;
 
+import java.util.List;
+
 /*
 Copyright (c) 2004-2006 by Idiom Technologies, Inc. All rights reserved.
 IDIOM is a registered trademark of Idiom Technologies, Inc. and WORLDSERVER
@@ -49,7 +51,7 @@ public interface ConfigEntry {
      * @return specifies group member characters. The meaning of these characters is that if some string starts with the
      * character from this array then it(string) belongs to this group
      */
-    String[] getGroupMembers();
+    List<String> getGroupMembers();
 
     boolean isInRange(String value, IndexCollator collator);
 

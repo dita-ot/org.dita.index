@@ -2,6 +2,8 @@ package com.idiominc.ws.opentopic.fo.index2;
 
 import org.w3c.dom.Document;
 
+import java.util.Collection;
+
 /*
 Copyright (c) 2004-2006 by Idiom Technologies, Inc. All rights reserved.
 IDIOM is a registered trademark of Idiom Technologies, Inc. and WORLDSERVER
@@ -34,9 +36,9 @@ See the accompanying LICENSE file for applicable license.
  */
 public class IndexPreprocessResult {
     public final Document document;
-    public final IndexEntry[] indexEntries;
+    public final Collection<IndexEntry> indexEntries;
 
-    public IndexPreprocessResult(final Document theDocument, final IndexEntry[] theIndexEntries) {
+    public IndexPreprocessResult(final Document theDocument, final Collection<IndexEntry> theIndexEntries) {
         document = theDocument;
         indexEntries = theIndexEntries;
     }

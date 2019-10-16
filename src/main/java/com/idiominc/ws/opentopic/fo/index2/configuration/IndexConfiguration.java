@@ -5,6 +5,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -44,8 +45,8 @@ public class IndexConfiguration {
     private IndexConfiguration() {
     }
 
-    public ConfigEntry[] getEntries() {
-        return entries.toArray(new ConfigEntry[0]);
+    public List<ConfigEntry> getEntries() {
+        return entries;
     }
 
     private void addEntry(final ConfigEntry theEntry) {
@@ -90,11 +91,11 @@ public class IndexConfiguration {
 
                 final String keyValue = getNodeValue(key);
                 final String labelValue = getNodeValue(label);
-                String[] groupMembers = new String[0];
-                final ArrayList<CharRange> rangeList = new ArrayList<>();
+                List<String> groupMembers = Collections.emptyList();
+                final List<CharRange> rangeList = new ArrayList<>();
 
                 if (null != members && members.getChildNodes().getLength() > 0) {
-                    final ArrayList<String> nodeValues = new ArrayList<>();
+                    final List<String> nodeValues = new ArrayList<>();
 
                     final NodeList membersChilds = members.getChildNodes();
                     for (int j = 0; j < membersChilds.getLength(); j++) {
@@ -118,7 +119,7 @@ public class IndexConfiguration {
                             }
                         }
                     }
-                    groupMembers = nodeValues.toArray(new String[0]);
+                    groupMembers = nodeValues;
                 }
                 final ConfigEntryImpl configEntry = new ConfigEntryImpl(labelValue, keyValue, groupMembers);
                 for (CharRange charRange : rangeList) {

@@ -2,7 +2,9 @@ package com.idiominc.ws.opentopic.fo.index2;
 
 import org.w3c.dom.Node;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /*
 Copyright (c) 2004-2006 by Idiom Technologies, Inc. All rights reserved.
@@ -36,19 +38,16 @@ See the accompanying LICENSE file for applicable license.
  */
 
 /**
- * User: Ivan Luzyanin
- * Date: 21.06.2005
- * Time: 11:14:25
- * <br><br>
- * Respresents the Adobe Framemaker's index entry<br>
- * <code>See "Adobe Framemaker 7.1" help, topic "Adding index markers" (page is "1_15_8_0.html") for details</code>
+ * Respresents the Adobe Framemaker's index entry.
+ *
+ * <pre>See "Adobe Framemaker 7.1" help, topic "Adding index markers" (page is "1_15_8_0.html") for details</pre>
  */
 public interface IndexEntry {
 
     /**
      * @return index reference ids
      */
-    String[] getRefIDs();
+    Set<String> getRefIDs();
 
     /**
      * @return index entry value
@@ -77,7 +76,7 @@ public interface IndexEntry {
     /**
      * @return child entries of this entry
      */
-    IndexEntry[] getChildIndexEntries();
+    List<IndexEntry> getChildIndexEntries();
 
     /**
      * @return if this entry starts range<br>
@@ -160,7 +159,7 @@ public interface IndexEntry {
 
     void addSeeAlsoChild(IndexEntry theEntry);
 
-    IndexEntry[] getSeeChildIndexEntries();
+    List<IndexEntry> getSeeChildIndexEntries();
 
-    IndexEntry[] getSeeAlsoChildIndexEntries();
+    List<IndexEntry> getSeeAlsoChildIndexEntries();
 }

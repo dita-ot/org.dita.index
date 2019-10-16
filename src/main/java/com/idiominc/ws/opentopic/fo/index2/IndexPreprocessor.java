@@ -93,19 +93,19 @@ public final class IndexPreprocessor {
         final Document doc = documentBuilder.newDocument();
         final Node rootElement = input.getDocumentElement();
         final ArrayList<IndexEntry> indexes = new ArrayList<>();
-        final Node node = processCurrNode(rootElement, doc, indexes::add)[0];
+        final Node node = processCurrNode(rootElement, doc, indexes::add).get(0);
         doc.appendChild(node);
         doc.getDocumentElement().setAttribute(XMLNS_ATTRIBUTE + ":" + this.prefix, this.namespace_url);
-        return new IndexPreprocessResult(doc, indexes.toArray(new IndexEntry[0]));
+        return new IndexPreprocessResult(doc, indexes);
     }
 
     /**
      * Append index groups to the end of document
      */
-    public void createAndAddIndexGroups(final IndexEntry[] theIndexEntries, final IndexConfiguration theConfiguration,
+    public void createAndAddIndexGroups(final Collection<IndexEntry> theIndexEntries, final IndexConfiguration theConfiguration,
                                         final Document theDocument, final Locale theLocale) {
         final IndexComparator indexEntryComparator = new IndexComparator(theLocale);
-        final IndexGroup[] indexGroups = indexGroupProcessor.process(theIndexEntries, theConfiguration, theLocale);
+        final List<IndexGroup> indexGroups = indexGroupProcessor.process(theIndexEntries, theConfiguration, theLocale);
         final Element rootElement = theDocument.getDocumentElement();
         final Element indexGroupsElement = theDocument.createElementNS(namespace_url, "index.groups");
         indexGroupsElement.setPrefix(prefix);
@@ -118,7 +118,7 @@ public final class IndexPreprocessor {
             groupLabelElement.setPrefix(prefix);
             groupLabelElement.appendChild(theDocument.createTextNode(group.getLabel()));
             groupElement.appendChild(groupLabelElement);
-            final Node[] entryNodes = transformToNodes(group.getEntries(), theDocument, indexEntryComparator);
+            final List<Node> entryNodes = transformToNodes(new ArrayList(group.getEntries()), theDocument, indexEntryComparator);
             for (final Node entryNode : entryNodes) {
                 groupElement.appendChild(entryNode);
             }
@@ -136,7 +136,7 @@ public final class IndexPreprocessor {
      * @param theIndexEntryFoundListener listener to notify that new index entry was found
      * @return the array of nodes after processing input node
      */
-    private Node[] processCurrNode(final Node theNode, final Document theTargetDocument, final IndexEntryFoundListener theIndexEntryFoundListener) {
+    private List<Node> processCurrNode(final Node theNode, final Document theTargetDocument, final IndexEntryFoundListener theIndexEntryFoundListener) {
         final NodeList childNodes = theNode.getChildNodes();
 
         if (checkElementName(theNode) && !excludedDraftSection.peek()) {
@@ -147,7 +147,7 @@ public final class IndexPreprocessor {
                 excludedDraftSection.add(true);
             }
             for (int i = 0; i < childNodes.getLength(); i++) {
-                final Node[] processedNodes = processCurrNode(childNodes.item(i), theTargetDocument, theIndexEntryFoundListener);
+                final List<Node> processedNodes = processCurrNode(childNodes.item(i), theTargetDocument, theIndexEntryFoundListener);
                 for (final Node node : processedNodes) {
                     result.appendChild(node);
                 }
@@ -155,11 +155,11 @@ public final class IndexPreprocessor {
             if (!includeDraft && checkDraftNode(theNode)) {
                 excludedDraftSection.pop();
             }
-            return new Node[]{result};
+            return Collections.singletonList(result);
         }
     }
 
-    private Node[] processIndexNode(final Node theNode, final Document theTargetDocument, final IndexEntryFoundListener theIndexEntryFoundListener) {
+    private List<Node> processIndexNode(final Node theNode, final Document theTargetDocument, final IndexEntryFoundListener theIndexEntryFoundListener) {
         theNode.normalize();
 
         boolean ditastyle = false;
@@ -193,23 +193,23 @@ public final class IndexPreprocessor {
 
         final ArrayList<Node> res = new ArrayList<>();
         if ((ditastyle)) {
-            final IndexEntry[] indexEntries = indexDitaProcessor.processIndexDitaNode(theNode, "");
+            final List<IndexEntry> indexEntries = indexDitaProcessor.processIndexDitaNode(theNode, "");
 
             for (final IndexEntry indexEntrie : indexEntries) {
                 theIndexEntryFoundListener.foundEntry(indexEntrie);
             }
 
-            final Node[] nodes = transformToNodes(indexEntries, theTargetDocument, null);
-            res.addAll(Arrays.asList(nodes));
+            final List<Node> nodes = transformToNodes(indexEntries, theTargetDocument, null);
+            res.addAll(nodes);
 
         } else if (textNode != null) {
-            final Node[] nodes = processIndexString(textNode, contents, theTargetDocument, theIndexEntryFoundListener);
-            res.addAll(Arrays.asList(nodes));
+            final List<Node> nodes = processIndexString(textNode, contents, theTargetDocument, theIndexEntryFoundListener);
+            res.addAll(nodes);
         } else {
-            return new Node[0];
+            return Collections.emptyList();
         }
 
-        return res.toArray(new Node[0]);
+        return res;
 
     }
 
@@ -240,8 +240,8 @@ public final class IndexPreprocessor {
      * @param theIndexEntryFoundListener listener to notify that new index entry was found
      * @return the array of nodes after processing index string
      */
-    private Node[] processIndexString(final String theIndexString, final List<Node> contents, final Document theTargetDocument, final IndexEntryFoundListener theIndexEntryFoundListener) {
-        final IndexEntry[] indexEntries = IndexStringProcessor.processIndexString(theIndexString, contents);
+    private List<Node> processIndexString(final String theIndexString, final List<Node> contents, final Document theTargetDocument, final IndexEntryFoundListener theIndexEntryFoundListener) {
+        final List<IndexEntry> indexEntries = IndexStringProcessor.processIndexString(theIndexString, contents);
 
         for (final IndexEntry indexEntrie : indexEntries) {
             theIndexEntryFoundListener.foundEntry(indexEntrie);
@@ -258,12 +258,12 @@ public final class IndexPreprocessor {
      * @param theIndexEntryComparator comparator to sort the index entries. if it is null the index entries will be unsorted
      * @return nodes for the target document
      */
-    private Node[] transformToNodes(final IndexEntry[] theIndexEntries, final Document theTargetDocument, final Comparator<IndexEntry> theIndexEntryComparator) {
+    private List<Node> transformToNodes(final List<IndexEntry> theIndexEntries, final Document theTargetDocument, final Comparator<IndexEntry> theIndexEntryComparator) {
         if (null != theIndexEntryComparator) {
-            Arrays.sort(theIndexEntries, theIndexEntryComparator);
+            Collections.sort(theIndexEntries, theIndexEntryComparator);
         }
 
-        final List<Element> result = new ArrayList<>();
+        final List<Node> result = new ArrayList<>();
         for (final IndexEntry indexEntry : theIndexEntries) {
             final Element indexEntryNode = createElement(theTargetDocument, "index.entry");
 
@@ -285,7 +285,7 @@ public final class IndexPreprocessor {
             }
             indexEntryNode.appendChild(formattedStringElement);
 
-            final String[] refIDs = indexEntry.getRefIDs();
+            final Set<String> refIDs = indexEntry.getRefIDs();
             for (final String refID : refIDs) {
                 final Element referenceIDElement = createElement(theTargetDocument, "refID");
                 referenceIDElement.setAttribute("indexid", hashPrefix + refID.hashCode());
@@ -314,18 +314,18 @@ public final class IndexPreprocessor {
                 indexEntryNode.setAttribute("single-page", "true");
             }
 
-            final IndexEntry[] childIndexEntries = indexEntry.getChildIndexEntries();
+            final List<IndexEntry> childIndexEntries = indexEntry.getChildIndexEntries();
 
-            final Node[] nodes = transformToNodes(childIndexEntries, theTargetDocument, theIndexEntryComparator);
+            final List<Node> nodes = transformToNodes(childIndexEntries, theTargetDocument, theIndexEntryComparator);
 
             for (final Node node : nodes) {
                 indexEntryNode.appendChild(node);
             }
 
-            final IndexEntry[] seeChildIndexEntries = indexEntry.getSeeChildIndexEntries();
+            final List<IndexEntry> seeChildIndexEntries = indexEntry.getSeeChildIndexEntries();
             if (seeChildIndexEntries != null) {
                 final Element seeElement = createElement(theTargetDocument, "see-childs");
-                final Node[] seeNodes = transformToNodes(seeChildIndexEntries, theTargetDocument, theIndexEntryComparator);
+                final List<Node> seeNodes = transformToNodes(seeChildIndexEntries, theTargetDocument, theIndexEntryComparator);
                 for (final Node node : seeNodes) {
                     seeElement.appendChild(node);
                 }
@@ -333,10 +333,10 @@ public final class IndexPreprocessor {
                 indexEntryNode.appendChild(seeElement);
             }
 
-            final IndexEntry[] seeAlsoChildIndexEntries = indexEntry.getSeeAlsoChildIndexEntries();
+            final List<IndexEntry> seeAlsoChildIndexEntries = indexEntry.getSeeAlsoChildIndexEntries();
             if (seeAlsoChildIndexEntries != null) {
                 final Element seeAlsoElement = createElement(theTargetDocument, "see-also-childs");
-                final Node[] seeAlsoNodes = transformToNodes(seeAlsoChildIndexEntries, theTargetDocument, theIndexEntryComparator);
+                final List<Node> seeAlsoNodes = transformToNodes(seeAlsoChildIndexEntries, theTargetDocument, theIndexEntryComparator);
                 for (final Node node : seeAlsoNodes) {
                     seeAlsoElement.appendChild(node);
                 }
@@ -346,7 +346,7 @@ public final class IndexPreprocessor {
 
             result.add(indexEntryNode);
         }
-        return result.toArray(new Node[0]);
+        return result;
     }
 
     /**

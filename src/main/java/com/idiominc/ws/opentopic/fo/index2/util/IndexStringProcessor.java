@@ -3,6 +3,8 @@ package com.idiominc.ws.opentopic.fo.index2.util;
 import com.idiominc.ws.opentopic.fo.index2.IndexEntry;
 import org.w3c.dom.Node;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static com.idiominc.ws.opentopic.fo.index2.IndexPreprocessor.VALUE_SEPARATOR;
@@ -46,11 +48,11 @@ public abstract class IndexStringProcessor {
      * @param contents             IndexPreprocessorTask instance
      * @return IndexEntry objects created from the index string
      */
-    public static IndexEntry[] processIndexString(final String theIndexMarkerString, final List<Node> contents) {
+    public static List<IndexEntry> processIndexString(final String theIndexMarkerString, final List<Node> contents) {
         final IndexEntry indexEntry = createIndexEntry(theIndexMarkerString, contents, null, false);
         final String referenceIDBuf = indexEntry.getValue() + VALUE_SEPARATOR;
         indexEntry.addRefID(referenceIDBuf);
-        return new IndexEntry[]{indexEntry};
+        return Collections.singletonList(indexEntry);
     }
 
     /**

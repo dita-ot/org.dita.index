@@ -8,9 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static com.idiominc.ws.opentopic.fo.index2.IndexPreprocessor.VALUE_SEPARATOR;
 import static org.dita.dost.util.Constants.*;
@@ -65,7 +63,7 @@ public final class IndexDitaProcessor {
      * @param theParentValue parent value
      * @return index entries
      */
-    public IndexEntry[] processIndexDitaNode(final Node theNode, final String theParentValue) {
+    public List<IndexEntry> processIndexDitaNode(final Node theNode, final String theParentValue) {
         final NodeList childNodes = theNode.getChildNodes();
         final StringBuilder textValueBuffer = new StringBuilder();
         final List<Node> contents = new ArrayList<>();
@@ -95,8 +93,8 @@ public final class IndexDitaProcessor {
                 } else {
                     currentRefId = currentTextValue + VALUE_SEPARATOR;
                 }
-                final IndexEntry[] childs = processIndexDitaNode(child, theParentValue + currentRefId);
-                childEntrys.addAll(Arrays.asList(childs));
+                final Collection<IndexEntry> childs = processIndexDitaNode(child, theParentValue + currentRefId);
+                childEntrys.addAll(childs);
 
             } else if (INDEXING_D_INDEX_SORT_AS.matches(child)) {
 
@@ -110,11 +108,11 @@ public final class IndexDitaProcessor {
                     }
                 }
             } else if (INDEXING_D_INDEX_SEE.matches(child)) {
-                final IndexEntry[] childs = processIndexDitaNode(child, "");
-                seeEntry.addAll(Arrays.asList(childs));
+                final Collection<IndexEntry> childs = processIndexDitaNode(child, "");
+                seeEntry.addAll(childs);
             } else if (INDEXING_D_INDEX_SEE_ALSO.matches(child)) {
-                final IndexEntry[] childs = processIndexDitaNode(child, "");
-                seeAlsoEntry.addAll(Arrays.asList(childs));
+                final Collection<IndexEntry> childs = processIndexDitaNode(child, "");
+                seeAlsoEntry.addAll(childs);
             } else if (child.getNodeType() == Node.ELEMENT_NODE) {
                 contents.add(child);
                 textValueBuffer.append(XMLUtils.getStringValue((Element) child));
@@ -177,11 +175,9 @@ public final class IndexDitaProcessor {
             for (final IndexEntry child : childEntrys) {
                 result.addChild(child);
             }
-            final IndexEntry[] resultArray = new IndexEntry[1];
-            resultArray[0] = result;
-            return resultArray;
+            return Collections.singletonList(result);
         } else {
-            return childEntrys.toArray(new IndexEntry[0]);
+            return childEntrys;
         }
     }
 

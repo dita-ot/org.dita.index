@@ -4,6 +4,8 @@ import com.idiominc.ws.opentopic.fo.index2.IndexCollator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /*
 Copyright (c) 2004-2006 by Idiom Technologies, Inc. All rights reserved.
@@ -34,23 +36,20 @@ with those set forth herein.
 
 This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
- */class ConfigEntryImpl
-        implements ConfigEntry {
+ */class ConfigEntryImpl implements ConfigEntry {
     private final String label;
     private final String key;
-    private final String[] members;
-    private CharRange[] ranges = new CharRange[0];
+    private final List<String> members;
+    private final List<CharRange> ranges = new ArrayList<>();
 
-    public ConfigEntryImpl(final String theLabel, final String theKey, final String[] theMembers) {
+    public ConfigEntryImpl(final String theLabel, final String theKey, final List<String> theMembers) {
         this.label = theLabel;
         this.key = theKey;
         this.members = theMembers;
     }
 
     public void addRange(final CharRange range) {
-        final ArrayList<CharRange> rangeList = new ArrayList<>(Arrays.asList(ranges));
-        rangeList.add(range);
-        ranges = rangeList.toArray(new CharRange[0]);
+        ranges.add(range);
     }
 
     public String getLabel() {
@@ -61,7 +60,7 @@ See the accompanying LICENSE file for applicable license.
         return this.key;
     }
 
-    public String[] getGroupMembers() {
+    public List<String> getGroupMembers() {
         return this.members;
     }
 

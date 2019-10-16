@@ -35,26 +35,23 @@ See the accompanying LICENSE file for applicable license.
  */
 class IndexComparator implements Comparator<IndexEntry> {
 
-    private final IndexCollator Collator;
+    private final IndexCollator collator;
 
-    public IndexComparator(final Locale theLocale) {
-        this.Collator = new IndexCollator(theLocale);
+    public IndexComparator(final Locale locale) {
+        this.collator = new IndexCollator(locale);
     }
 
     public int compare(final IndexEntry o1, final IndexEntry o2) {
         final String value1 = getSortString(o1);
         final String value2 = getSortString(o2);
-
-        return this.Collator.compare(value1, value2);
+        return collator.compare(value1, value2);
     }
 
-    private String getSortString(final IndexEntry theEntry1) {
-        String result;
-        if (theEntry1.getSortString() != null) {
-            result = theEntry1.getSortString();
+    private String getSortString(final IndexEntry entry) {
+        if (entry.getSortString() != null) {
+            return entry.getSortString();
         } else {
-            result = theEntry1.getValue();
+            return entry.getValue();
         }
-        return result;
     }
 }

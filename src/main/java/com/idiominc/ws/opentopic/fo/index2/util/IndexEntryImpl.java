@@ -69,8 +69,9 @@ class IndexEntryImpl implements IndexEntry {
         this.contents = contents;
     }
 
-    public String[] getRefIDs() {
-        return refIDs.toArray(new String[0]);
+    @Override
+    public Set<String> getRefIDs() {
+        return new HashSet(refIDs);
     }
 
     public String getValue() {
@@ -89,9 +90,8 @@ class IndexEntryImpl implements IndexEntry {
         return this.sortString;
     }
 
-    public IndexEntry[] getChildIndexEntries() {
-        final Collection<IndexEntry> collection = childs.values();
-        return collection.toArray(new IndexEntry[0]);
+    public List<IndexEntry> getChildIndexEntries() {
+        return new ArrayList(childs.values());
     }
 
     public boolean isStartingRange() {
@@ -116,142 +116,132 @@ class IndexEntryImpl implements IndexEntry {
         }
     }
 
-    public void addSeeChild(final IndexEntry theEntry) {
-        final String entryValue = theEntry.getValue();
+    public void addSeeChild(final IndexEntry entry) {
+        final String entryValue = entry.getValue();
         if (!this.seeChilds.containsKey(entryValue)) {
-            this.seeChilds.put(entryValue, theEntry);
+            this.seeChilds.put(entryValue, entry);
             return;
         }
         //The index with same value already exists
         //Add seeChilds of given entry to existing entry
         final IndexEntry existingEntry = this.seeChilds.get(entryValue);
 
-        final IndexEntry[] childIndexEntries = theEntry.getChildIndexEntries();
+        final Collection<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
         for (final IndexEntry childIndexEntry : childIndexEntries) {
             existingEntry.addChild(childIndexEntry);
         }
         //supress some attributes of given entry to the existing one
-        if (theEntry.isRestoresPageNumber()) {
+        if (entry.isRestoresPageNumber()) {
             existingEntry.setRestoresPageNumber(true);
         }
-        if (!theEntry.isSuppressesThePageNumber()) {
+        if (!entry.isSuppressesThePageNumber()) {
             existingEntry.setSuppressesThePageNumber(false);
         }
-        if (theEntry.isStartingRange()) {
+        if (entry.isStartingRange()) {
             existingEntry.setStartRange(true);
         }
-        if (theEntry.getSortString() != null) {
-            existingEntry.setSortString(theEntry.getSortString());
+        if (entry.getSortString() != null) {
+            existingEntry.setSortString(entry.getSortString());
         }
     }
 
-    public void addSeeAlsoChild(final IndexEntry theEntry) {
-        final String entryValue = theEntry.getValue();
+    public void addSeeAlsoChild(final IndexEntry entry) {
+        final String entryValue = entry.getValue();
         if (!this.seeAlsoChilds.containsKey(entryValue)) {
-            this.seeAlsoChilds.put(entryValue, theEntry);
+            this.seeAlsoChilds.put(entryValue, entry);
             return;
         }
         //The index with same value already exists
         //Add seeAlsoChilds of given entry to existing entry
         final IndexEntry existingEntry = this.seeAlsoChilds.get(entryValue);
 
-        final IndexEntry[] childIndexEntries = theEntry.getChildIndexEntries();
+        final Collection<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
         for (final IndexEntry childIndexEntry : childIndexEntries) {
             existingEntry.addChild(childIndexEntry);
         }
         //supress some attributes of given entry to the existing one
-        if (theEntry.isRestoresPageNumber()) {
+        if (entry.isRestoresPageNumber()) {
             existingEntry.setRestoresPageNumber(true);
         }
-        if (!theEntry.isSuppressesThePageNumber()) {
+        if (!entry.isSuppressesThePageNumber()) {
             existingEntry.setSuppressesThePageNumber(false);
         }
-        if (theEntry.isStartingRange()) {
+        if (entry.isStartingRange()) {
             existingEntry.setStartRange(true);
         }
-        if (theEntry.getSortString() != null) {
-            existingEntry.setSortString(theEntry.getSortString());
+        if (entry.getSortString() != null) {
+            existingEntry.setSortString(entry.getSortString());
         }
     }
 
-    public void addChild(final IndexEntry theEntry) {
-        final String entryValue = theEntry.getValue();
-        if (!this.childs.containsKey(entryValue)) {
-            this.childs.put(entryValue, theEntry);
+    public void addChild(final IndexEntry entry) {
+        final String entryValue = entry.getValue();
+        if (!childs.containsKey(entryValue)) {
+            childs.put(entryValue, entry);
             return;
         }
         //The index with same value already exists
         //Add childs of given entry to existing entry
-        final IndexEntry existingEntry = this.childs.get(entryValue);
+        final IndexEntry existingEntry = childs.get(entryValue);
 
-        final IndexEntry[] childIndexEntries = theEntry.getChildIndexEntries();
+        final Collection<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
         for (final IndexEntry childIndexEntry : childIndexEntries) {
             existingEntry.addChild(childIndexEntry);
         }
         //supress some attributes of given entry to the existing one
-        if (theEntry.isRestoresPageNumber()) {
+        if (entry.isRestoresPageNumber()) {
             existingEntry.setRestoresPageNumber(true);
         }
-        if (!theEntry.isSuppressesThePageNumber()) {
+        if (!entry.isSuppressesThePageNumber()) {
             existingEntry.setSuppressesThePageNumber(false);
         }
-        if (theEntry.isStartingRange()) {
+        if (entry.isStartingRange()) {
             existingEntry.setStartRange(true);
         }
-        if (theEntry.getSortString() != null) {
-            existingEntry.setSortString(theEntry.getSortString());
+        if (entry.getSortString() != null) {
+            existingEntry.setSortString(entry.getSortString());
         }
     }
 
-    public void setSortString(final String theSortString) {
-        this.sortString = theSortString;
+    public void setSortString(final String sortString) {
+        this.sortString = sortString;
     }
 
     public void setStartRange(final boolean theStartRange) {
-        if (theStartRange && this.endsRange) {
-            this.endsRange = false;
+        if (theStartRange && endsRange) {
+            endsRange = false;
         }
-        this.startRange = theStartRange;
+        startRange = theStartRange;
     }
 
     public void setEndsRange(final boolean theEndsRange) {
-        if (theEndsRange && this.startRange) {
-            this.startRange = false;
+        if (theEndsRange && startRange) {
+            startRange = false;
         }
-        this.endsRange = theEndsRange;
+        endsRange = theEndsRange;
     }
 
     public void setSuppressesThePageNumber(final boolean theSuppressesThePageNumber) {
-        if (theSuppressesThePageNumber && this.restoresPageNumber) {
-            this.restoresPageNumber = false;
+        if (theSuppressesThePageNumber && restoresPageNumber) {
+            restoresPageNumber = false;
         }
 
-        this.suppressesThePageNumber = theSuppressesThePageNumber;
+        suppressesThePageNumber = theSuppressesThePageNumber;
     }
 
     public void setRestoresPageNumber(final boolean theRestoresPageNumber) {
-        if (theRestoresPageNumber && this.suppressesThePageNumber) {
-            this.suppressesThePageNumber = false;
+        if (theRestoresPageNumber && suppressesThePageNumber) {
+            suppressesThePageNumber = false;
         }
-        this.restoresPageNumber = theRestoresPageNumber;
+        restoresPageNumber = theRestoresPageNumber;
     }
 
-    public IndexEntry[] getSeeChildIndexEntries() {
-        if (!seeChilds.isEmpty()) {
-            final Collection<IndexEntry> collection = seeChilds.values();
-            return collection.toArray(new IndexEntry[0]);
-        } else {
-            return null;
-        }
+    public List<IndexEntry> getSeeChildIndexEntries() {
+        return new ArrayList(seeChilds.values());
     }
 
-    public IndexEntry[] getSeeAlsoChildIndexEntries() {
-        if (!seeAlsoChilds.isEmpty()) {
-            final Collection<IndexEntry> collection = seeAlsoChilds.values();
-            return collection.toArray(new IndexEntry[0]);
-        } else {
-            return null;
-        }
+    public List<IndexEntry> getSeeAlsoChildIndexEntries() {
+        return new ArrayList(seeAlsoChilds.values());
     }
 
     @Override

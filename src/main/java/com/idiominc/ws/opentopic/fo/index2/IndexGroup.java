@@ -31,6 +31,8 @@ This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
  */
 
+import java.util.Collection;
+
 /**
  * Represents index group.
  */
@@ -44,7 +46,7 @@ public interface IndexGroup {
     /**
      * @return group entries
      */
-    IndexEntry[] getEntries();
+    Collection<IndexEntry> getEntries();
 
     /**
      * Adds entry to the index group
