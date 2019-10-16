@@ -1,5 +1,6 @@
 package com.idiominc.ws.opentopic.fo.index2;
 
+import java.util.Comparator;
 import java.util.Locale;
 
 /*
@@ -34,27 +35,19 @@ See the accompanying LICENSE file for applicable license.
  */
 public class IndexCollator {
 
-    private com.ibm.icu.text.Collator icu4jCollator = null;
-    private java.text.Collator defaultCollator;
-    private boolean icuCollator = true;
+    private Comparator collator;
 
     public IndexCollator(final Locale theLocale) {
-        this.defaultCollator = java.text.Collator.getInstance(theLocale);
         try {
-            this.icu4jCollator = com.ibm.icu.text.Collator.getInstance(theLocale);
+            collator = com.ibm.icu.text.Collator.getInstance(theLocale);
         } catch (final NoClassDefFoundError ex) {
             System.out.println("[INFO] IBM ICU4J Collator is not found. Default Java Collator will be used");
-            icuCollator = false;
+            collator = java.text.Collator.getInstance(theLocale);
         }
     }
 
     public int compare(final Object o1, final Object o2) {
-        if (icuCollator) {
-            return this.icu4jCollator.compare(o1, o2);
-        } else {
-            return this.defaultCollator.compare(o1, o2);
-        }
-
+        return collator.compare(o1, o2);
     }
 
 }

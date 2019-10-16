@@ -35,7 +35,7 @@ with those set forth herein.
 This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
  */
-class IndexEntryImpl implements IndexEntry {
+public class IndexEntryImpl implements IndexEntry {
 
     private final String value;
     private final String formattedString;
@@ -51,21 +51,21 @@ class IndexEntryImpl implements IndexEntry {
     private boolean suppressesThePageNumber = false;
     private boolean restoresPageNumber = false;
 
-    private final ArrayList<String> refIDs = new ArrayList<>();
+    private final List<String> refIDs = new ArrayList<>();
 
     /**
      * Index entry constructor.
      *
-     * @param theValue           string value
-     * @param theSortString      sort-as value
-     * @param theFormattedString formatter string value
+     * @param value           string value
+     * @param sortString      sort-as value
+     * @param formattedString formatter string value
      * @param contents           markup value, may be {@code null}
      */
-    public IndexEntryImpl(final String theValue, final String theSortString, final String theFormattedString,
-                          final List<Node> contents) {
-        this.value = theValue;
-        this.sortString = theSortString;
-        this.formattedString = theFormattedString;
+    public IndexEntryImpl(final String value, final String sortString,
+                          final String formattedString, final List<Node> contents) {
+        this.value = value;
+        this.sortString = sortString;
+        this.formattedString = formattedString;
         this.contents = contents;
     }
 
@@ -75,11 +75,11 @@ class IndexEntryImpl implements IndexEntry {
     }
 
     public String getValue() {
-        return this.value;
+        return value;
     }
 
     public String getFormattedString() {
-        return this.formattedString;
+        return formattedString;
     }
 
     public List<Node> getContents() {
@@ -87,7 +87,7 @@ class IndexEntryImpl implements IndexEntry {
     }
 
     public String getSortString() {
-        return this.sortString;
+        return sortString;
     }
 
     public List<IndexEntry> getChildIndexEntries() {
@@ -95,38 +95,38 @@ class IndexEntryImpl implements IndexEntry {
     }
 
     public boolean isStartingRange() {
-        return this.startRange;
+        return startRange;
     }
 
     public boolean isEndingRange() {
-        return this.endsRange;
+        return endsRange;
     }
 
     public boolean isSuppressesThePageNumber() {
-        return this.suppressesThePageNumber;
+        return suppressesThePageNumber;
     }
 
     public boolean isRestoresPageNumber() {
-        return this.restoresPageNumber;
+        return restoresPageNumber;
     }
 
     public void addRefID(final String theID) {
-        if (!this.refIDs.contains(theID)) {
-            this.refIDs.add(theID);
+        if (!refIDs.contains(theID)) {
+            refIDs.add(theID);
         }
     }
 
     public void addSeeChild(final IndexEntry entry) {
         final String entryValue = entry.getValue();
-        if (!this.seeChilds.containsKey(entryValue)) {
-            this.seeChilds.put(entryValue, entry);
+        if (!seeChilds.containsKey(entryValue)) {
+            seeChilds.put(entryValue, entry);
             return;
         }
         //The index with same value already exists
         //Add seeChilds of given entry to existing entry
-        final IndexEntry existingEntry = this.seeChilds.get(entryValue);
+        final IndexEntry existingEntry = seeChilds.get(entryValue);
 
-        final Collection<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
+        final List<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
         for (final IndexEntry childIndexEntry : childIndexEntries) {
             existingEntry.addChild(childIndexEntry);
         }
@@ -147,13 +147,13 @@ class IndexEntryImpl implements IndexEntry {
 
     public void addSeeAlsoChild(final IndexEntry entry) {
         final String entryValue = entry.getValue();
-        if (!this.seeAlsoChilds.containsKey(entryValue)) {
-            this.seeAlsoChilds.put(entryValue, entry);
+        if (!seeAlsoChilds.containsKey(entryValue)) {
+            seeAlsoChilds.put(entryValue, entry);
             return;
         }
         //The index with same value already exists
         //Add seeAlsoChilds of given entry to existing entry
-        final IndexEntry existingEntry = this.seeAlsoChilds.get(entryValue);
+        final IndexEntry existingEntry = seeAlsoChilds.get(entryValue);
 
         final Collection<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
         for (final IndexEntry childIndexEntry : childIndexEntries) {
@@ -246,24 +246,23 @@ class IndexEntryImpl implements IndexEntry {
 
     @Override
     public String toString() {
-        String result = "";
-        result += getValue();
-        if (this.isSuppressesThePageNumber()) {
-            result += "<$nopage>";
+        final StringBuilder result = new StringBuilder(getValue());
+        if (isSuppressesThePageNumber()) {
+            result.append("<$nopage>");
         }
-        if (this.isRestoresPageNumber()) {
-            result += "<$singlepage>";
+        if (isRestoresPageNumber()) {
+            result.append("<$singlepage>");
         }
-        if (this.isStartingRange()) {
-            result += "<$startrange>";
+        if (isStartingRange()) {
+            result.append("<$startrange>");
         }
-        if (this.isEndingRange()) {
-            result += "<$endrange>";
+        if (isEndingRange()) {
+            result.append("<$endrange>");
         }
-        if (this.getSortString() != null && this.getSortString().length() > 0) {
-            result += "[" + getSortString() + "]";
+        if (getSortString() != null && getSortString().length() > 0) {
+            result.append("[").append(getSortString()).append("]");
         }
-        return result;
+        return result.toString();
     }
 
 }

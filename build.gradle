@@ -18,6 +18,7 @@ repositories {
 }
 dependencies {
     compile group: "org.dita-ot", name: "dost", version: "[2.1,)"
+    testCompile "junit:junit:4.12"
 }
 
 sourceSets {

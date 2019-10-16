@@ -59,7 +59,7 @@ public final class IndexGroupProcessor {
                                 final Locale theLocale) {
         final IndexCollator collator = new IndexCollator(theLocale);
 
-        final List<MyIndexGroup> result = new ArrayList<>();
+        final List<IndexGroupImpl> result = new ArrayList<>();
 
         final List<ConfigEntry> entries = theIndexConfiguration.getEntries();
 
@@ -68,18 +68,18 @@ public final class IndexGroupProcessor {
         //Creating array of index groups
         for (final ConfigEntry configEntry : entries) {
             final String label = configEntry.getLabel();
-            final MyIndexGroup group = new MyIndexGroup(label, configEntry);
+            final IndexGroupImpl group = new IndexGroupImpl(label, configEntry);
             result.add(group);
         }
-        final List<MyIndexGroup> indexGroups = result;
+        final List<IndexGroupImpl> indexGroups = result;
 
         //Adding dependecies to group array
         for (int i = 0; i < indexGroups.size(); i++) {
-            final MyIndexGroup thisGroup = indexGroups.get(i);
+            final IndexGroupImpl thisGroup = indexGroups.get(i);
             final List<String> thisGroupMembers = thisGroup.getConfigEntry().getGroupMembers();
             for (int j = 0; j < indexGroups.size(); j++) {
                 if (j != i) {
-                    final MyIndexGroup compGroup = indexGroups.get(j);
+                    final IndexGroupImpl compGroup = indexGroups.get(j);
                     final List<String> compGroupMembers = compGroup.getConfigEntry().getGroupMembers();
                     if (doesStart(compGroupMembers, thisGroupMembers)) {
                         thisGroup.addChild(compGroup);
@@ -95,7 +95,7 @@ public final class IndexGroupProcessor {
          */
 
         for (int i = 0; i < indexGroups.size(); i++) {
-            final MyIndexGroup group = indexGroups.get(i);
+            final IndexGroupImpl group = indexGroups.get(i);
             final ConfigEntry configEntry = group.getConfigEntry();
 
             final List<String> groupMembers = configEntry.getGroupMembers();
@@ -103,7 +103,7 @@ public final class IndexGroupProcessor {
             if (!groupMembers.isEmpty()) {
                 //Find entries by comaping first letter with a chars in current config entry
                 for (final String key : indexMap.keySet()) {
-                    if (key.length() > 0) {
+                    if (!key.isEmpty()) {
                         final String value = getValue(indexMap.get(key));
                         //                        final char c = value.charAt(0);
                         if (configEntry.isInRange(value, collator)) {
@@ -136,12 +136,12 @@ public final class IndexGroupProcessor {
 
         //If some terms remain uncategorized, and a recognized special character
         //group is available, place remaining terms in that group
-        for (final MyIndexGroup group : indexGroups) {
+        for (final IndexGroupImpl group : indexGroups) {
             final ConfigEntry configEntry = group.getConfigEntry();
             final String configKey = configEntry.getKey();
             if (configKey.equals(SPECIAL_CHARACTER_GROUP_KEY)) {
                 for (final String key : new ArrayList<>(indexMap.keySet())) {
-                    if (key.length() > 0) {
+                    if (!key.isEmpty()) {
                         final String value = getValue(indexMap.get(key));
                         //                        final char c = value.charAt(0);
                         logger.info(MessageUtils.getMessage("PDFJ003I", value).toString());
@@ -155,7 +155,7 @@ public final class IndexGroupProcessor {
         //No recognized "Special characters" group; uncategorized terms have no place to go, must be dropped
         if (!indexMap.isEmpty()) {
             for (final String key : new ArrayList<>(indexMap.keySet())) {
-                if (key.length() > 0) {
+                if (!key.isEmpty()) {
                     final IndexEntry entry = indexMap.get(key);
                     logger.error(MessageUtils.getMessage("PDFJ001E", entry.toString()).toString());
                 }
@@ -167,7 +167,7 @@ public final class IndexGroupProcessor {
         }
 
         final List<IndexGroup> cleanResult = new ArrayList<>();
-        for (final MyIndexGroup indexGroup : indexGroups) {
+        for (final IndexGroupImpl indexGroup : indexGroups) {
             if (!indexGroup.getEntries().isEmpty()) {
                 cleanResult.add(indexGroup);
             }
@@ -184,17 +184,19 @@ public final class IndexGroupProcessor {
         }
     }
 
-    private static List<String> getIndexKeysOfIndexesInRange(final String theKey1, final String theKey2, final IndexCollator theCollator, final Map<String, IndexEntry> theIndexEntryMap) {
+    private static List<String> getIndexKeysOfIndexesInRange(final String key1, final String key2,
+                                                             final IndexCollator collator,
+                                                             final Map<String, IndexEntry> indexEntryMap) {
         final List<String> res = new ArrayList<>();
-        for (final Map.Entry<String, IndexEntry> e : theIndexEntryMap.entrySet()) {
-            final int res1 = theCollator.compare(theKey1, getValue(e.getValue()));
+        for (final Map.Entry<String, IndexEntry> e : indexEntryMap.entrySet()) {
+            final int res1 = collator.compare(key1, getValue(e.getValue()));
             if (res1 <= 0) {
-                if (theKey2 == null) {
+                if (key2 == null) {
                     //the right range is not specified
                     res.add(e.getKey());
                     continue;
                 }
-                final int res2 = theCollator.compare(theKey2, e.getKey());
+                final int res2 = collator.compare(key2, e.getKey());
                 if (res2 > 0) {
                     res.add(e.getKey());
                 }
@@ -203,6 +205,7 @@ public final class IndexGroupProcessor {
         return res;
     }
 
+    @Deprecated
     private static boolean doesStart(final String sourceString, final List<String> compStrings) {
         for (final String compString : compStrings) {
             if (sourceString.startsWith(compString)) {
@@ -263,71 +266,4 @@ public final class IndexGroupProcessor {
         return map;
     }
 
-    private static class MyIndexGroup implements IndexGroup {
-        private final String label;
-        private final ConfigEntry configEntry;
-        private final List<IndexEntry> entries = new ArrayList<>();
-        private final List<MyIndexGroup> childList = new ArrayList<>();
-
-        MyIndexGroup(final String theLabel, final ConfigEntry theConfigEntry) {
-            this.label = theLabel;
-            this.configEntry = theConfigEntry;
-        }
-
-        public String getLabel() {
-            return this.label;
-        }
-
-        public Collection<IndexEntry> getEntries() {
-            return entries;
-        }
-
-        ConfigEntry getConfigEntry() {
-            return this.configEntry;
-        }
-
-        public void addEntry(final IndexEntry theEntry) {
-            boolean isInserted = false;
-            if (!childList.isEmpty()) {
-                //                MyIndexGroup[] childGroupList = (MyIndexGroup[]) childList.toArray(new MyIndexGroup[childList.size()]);
-                for (int i = 0; i < childList.size() && !isInserted; i++) {
-                    final MyIndexGroup thisChild = childList.get(i);
-                    final List<String> thisGroupMembers = thisChild.getConfigEntry().getGroupMembers();
-                    if (doesStart(theEntry.getValue(), thisGroupMembers)) {
-                        thisChild.addEntry(theEntry);
-                        isInserted = true;
-                    }
-                }
-            }
-            if (!isInserted) {
-                this.entries.add(theEntry);
-            }
-        }
-
-        void addChild(final MyIndexGroup theIndexGroup) {
-            if (!this.childList.contains(theIndexGroup)) {
-                this.childList.add(theIndexGroup);
-            }
-            //            MyIndexGroup[] childGroupList = (MyIndexGroup[]) childList.toArray(new MyIndexGroup[childList.size()]);
-            for (int i = 0; i < childList.size(); i++) {
-                final MyIndexGroup thisChild = childList.get(i);
-                for (int j = 0; j < childList.size(); j++) {
-                    if (i != j) {
-                        final MyIndexGroup compChild = childList.get(j);
-                        final List<String> thisGroupMembers = thisChild.getConfigEntry().getGroupMembers();
-                        final List<String> compGroupMembers = compChild.getConfigEntry().getGroupMembers();
-                        if (doesStart(thisGroupMembers, compGroupMembers)) {
-                            this.childList.remove(thisChild);
-                            compChild.addChild(thisChild);
-                        }
-                    }
-                }
-            }
-        }
-
-        public void removeChild(final MyIndexGroup theIndexGroup) {
-            this.childList.remove(theIndexGroup);
-        }
-
-    }
 }

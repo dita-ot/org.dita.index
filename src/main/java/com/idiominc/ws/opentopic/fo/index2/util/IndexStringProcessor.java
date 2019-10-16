@@ -44,12 +44,12 @@ public abstract class IndexStringProcessor {
     /**
      * Parse the index marker string and create IndexEntry object from one.
      *
-     * @param theIndexMarkerString index marker string
+     * @param indexMarkerString index marker string
      * @param contents             IndexPreprocessorTask instance
      * @return IndexEntry objects created from the index string
      */
-    public static List<IndexEntry> processIndexString(final String theIndexMarkerString, final List<Node> contents) {
-        final IndexEntry indexEntry = createIndexEntry(theIndexMarkerString, contents, null, false);
+    public static List<IndexEntry> processIndexString(final String indexMarkerString, final List<Node> contents) {
+        final IndexEntry indexEntry = createIndexEntry(indexMarkerString, contents, null, false);
         final String referenceIDBuf = indexEntry.getValue() + VALUE_SEPARATOR;
         indexEntry.addRefID(referenceIDBuf);
         return Collections.singletonList(indexEntry);

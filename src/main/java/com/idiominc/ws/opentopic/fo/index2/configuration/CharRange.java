@@ -9,21 +9,14 @@ package com.idiominc.ws.opentopic.fo.index2.configuration;
 
 import com.idiominc.ws.opentopic.fo.index2.IndexCollator;
 
-/**
- * Created by IntelliJ IDEA.
- * User: BlackSide
- * Date: 30/8/2007
- * Time: 18:34:32
- * To change this template use File | Settings | File Templates.
- */
 class CharRange {
 
     private final String start;
     private final String end;
 
-    public CharRange(final String theStart, final String theEnd) {
-        start = theStart;
-        end = theEnd;
+    public CharRange(final String start, final String end) {
+        this.start = start;
+        this.end = end;
     }
 
     public boolean isInRange(final String value, final IndexCollator collator) {

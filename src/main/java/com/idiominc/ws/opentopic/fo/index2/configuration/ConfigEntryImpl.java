@@ -3,8 +3,6 @@ package com.idiominc.ws.opentopic.fo.index2.configuration;
 import com.idiominc.ws.opentopic.fo.index2.IndexCollator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /*
@@ -36,7 +34,8 @@ with those set forth herein.
 
 This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
- */class ConfigEntryImpl implements ConfigEntry {
+ */
+class ConfigEntryImpl implements ConfigEntry {
     private final String label;
     private final String key;
     private final List<String> members;
@@ -65,7 +64,7 @@ See the accompanying LICENSE file for applicable license.
     }
 
     public boolean isInRange(final String value, final IndexCollator collator) {
-        if (value.length() > 0) {
+        if (!value.isEmpty()) {
             for (final String member : members) {
                 if (value.startsWith(member) || member.startsWith(value)) {
                     return true;

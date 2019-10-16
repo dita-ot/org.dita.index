@@ -1,5 +1,6 @@
 package com.idiominc.ws.opentopic.fo.index2.util;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.idiominc.ws.opentopic.fo.index2.IndexEntry;
 import org.dita.dost.log.DITAOTLogger;
 import org.dita.dost.log.MessageUtils;
@@ -8,10 +9,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.idiominc.ws.opentopic.fo.index2.IndexPreprocessor.VALUE_SEPARATOR;
 import static org.dita.dost.util.Constants.*;
+import static org.dita.dost.util.XMLUtils.toList;
 
 /*
 Copyright (c) 2004-2006 by Idiom Technologies, Inc. All rights reserved.
@@ -47,8 +51,8 @@ public final class IndexDitaProcessor {
 
     private static final String LT = "<";
     private static final String GT = ">";
-    private static final String sortStart = "[";
-    private static final String sortEnd = "]";
+    private static final String SORT_START = "[";
+    private static final String SORT_END = "]";
 
     private DITAOTLogger logger;
 
@@ -68,56 +72,49 @@ public final class IndexDitaProcessor {
         final StringBuilder textValueBuffer = new StringBuilder();
         final List<Node> contents = new ArrayList<>();
         final StringBuilder sortStringBuffer = new StringBuilder();
-        String elIndexRangeStartName = "start";
+        final String elIndexRangeStartName = "start";
         final boolean startRange = theNode.getAttributes().getNamedItem(elIndexRangeStartName) != null;
-        String elIndexRangeEndName = "end";
+        final String elIndexRangeEndName = "end";
         final boolean endRange = theNode.getAttributes().getNamedItem(elIndexRangeEndName) != null;
-        final ArrayList<IndexEntry> childEntrys = new ArrayList<>();
-        final ArrayList<IndexEntry> seeEntry = new ArrayList<>();
-        final ArrayList<IndexEntry> seeAlsoEntry = new ArrayList<>();
+        final List<IndexEntry> childEntrys = new ArrayList<>();
+        final List<IndexEntry> seeEntry = new ArrayList<>();
+        final List<IndexEntry> seeAlsoEntry = new ArrayList<>();
 
         for (int i = 0; i < childNodes.getLength(); i++) { //Go through child nodes to find text nodes
             final Node child = childNodes.item(i);
-            if (child.getNodeType() == Node.TEXT_NODE) {
-                contents.add(child);
-                final String val = child.getNodeValue();
-                if (null != val) {
-                    textValueBuffer.append(val);
-                }
-            } else if (TOPIC_INDEXTERM.matches(child)) {
-
-                final String currentTextValue = normalizeTextValue(textValueBuffer.toString());
-                String currentRefId;
-                if (currentTextValue.equals("")) {
-                    currentRefId = "";
-                } else {
-                    currentRefId = currentTextValue + VALUE_SEPARATOR;
-                }
-                final Collection<IndexEntry> childs = processIndexDitaNode(child, theParentValue + currentRefId);
-                childEntrys.addAll(childs);
-
-            } else if (INDEXING_D_INDEX_SORT_AS.matches(child)) {
-
-                for (int j = 0; j < child.getChildNodes().getLength(); j++) {
-                    final Node sortChildNode = child.getChildNodes().item(j);
-                    if (sortChildNode.getNodeType() == Node.TEXT_NODE) {
-                        final String text = sortChildNode.getNodeValue();
-                        if (text != null) {
-                            sortStringBuffer.append(text);
-                        }
+            switch (child.getNodeType()) {
+                case Node.TEXT_NODE:
+                    contents.add(child);
+                    final String val = child.getNodeValue();
+                    if (null != val) {
+                        textValueBuffer.append(val);
                     }
-                }
-            } else if (INDEXING_D_INDEX_SEE.matches(child)) {
-                final Collection<IndexEntry> childs = processIndexDitaNode(child, "");
-                seeEntry.addAll(childs);
-            } else if (INDEXING_D_INDEX_SEE_ALSO.matches(child)) {
-                final Collection<IndexEntry> childs = processIndexDitaNode(child, "");
-                seeAlsoEntry.addAll(childs);
-            } else if (child.getNodeType() == Node.ELEMENT_NODE) {
-                contents.add(child);
-                textValueBuffer.append(XMLUtils.getStringValue((Element) child));
+                    break;
+                case Node.ELEMENT_NODE:
+                    if (TOPIC_INDEXTERM.matches(child)) {
+                        final String currentTextValue = normalizeTextValue(textValueBuffer.toString());
+                        final String currentRefId = currentTextValue.isEmpty() ? "" : (currentTextValue + VALUE_SEPARATOR);
+                        childEntrys.addAll(processIndexDitaNode(child, theParentValue + currentRefId));
+                    } else if (INDEXING_D_INDEX_SORT_AS.matches(child)) {
+                        final List<Node> children = toList(child.getChildNodes());
+                        for (final Node sortChildNode : children) {
+                            if (sortChildNode.getNodeType() == Node.TEXT_NODE) {
+                                final String text = sortChildNode.getNodeValue();
+                                if (text != null) {
+                                    sortStringBuffer.append(text);
+                                }
+                            }
+                        }
+                    } else if (INDEXING_D_INDEX_SEE.matches(child)) {
+                        seeEntry.addAll(processIndexDitaNode(child, ""));
+                    } else if (INDEXING_D_INDEX_SEE_ALSO.matches(child)) {
+                        seeAlsoEntry.addAll(processIndexDitaNode(child, ""));
+                    } else if (child.getNodeType() == Node.ELEMENT_NODE) {
+                        contents.add(child);
+                        textValueBuffer.append(XMLUtils.getStringValue((Element) child));
+                    }
+                    break;
             }
-
         }
         /*
         if (normalizeTextValue(textValueBuffer.toString()).length() == 0) {
@@ -130,10 +127,10 @@ public final class IndexDitaProcessor {
          */
         String textValue = normalizeTextValue(textValueBuffer.toString());
         String sortString = sortStringBuffer.toString();
-        if (textValue.contains(sortStart) && textValue.contains(sortEnd) && sortString.length() == 0) {
-            if (textValue.indexOf(sortStart) < textValue.indexOf(sortEnd)) {
-                sortString = textValue.substring(textValue.indexOf(sortStart) + 1, textValue.indexOf(sortEnd));
-                textValue = textValue.substring(0, textValue.indexOf(sortStart));
+        if (textValue.contains(SORT_START) && textValue.contains(SORT_END) && sortString.length() == 0) {
+            if (textValue.indexOf(SORT_START) < textValue.indexOf(SORT_END)) {
+                sortString = textValue.substring(textValue.indexOf(SORT_START) + 1, textValue.indexOf(SORT_END));
+                textValue = textValue.substring(0, textValue.indexOf(SORT_START));
             }
         }
 
@@ -150,8 +147,8 @@ public final class IndexDitaProcessor {
             seeAlsoEntry.clear();
         }
 
-        final IndexEntry result = createIndexEntry(contents, textValue, sortString);
-        if (result.getValue().length() > 0 || endRange || startRange) {
+        final IndexEntry result = new IndexEntryImpl(textValue, sortString.isEmpty() ? null : sortString, textValue, contents);
+        if (!result.getValue().isEmpty() || endRange || startRange) {
             result.setStartRange(startRange);
             result.setEndsRange(endRange);
             if (startRange) {
@@ -181,18 +178,8 @@ public final class IndexDitaProcessor {
         }
     }
 
-    private static IndexEntry createIndexEntry(final List<Node> contents, String theValue, final String theSortString) {
-
-        final IndexEntryImpl indexEntry = new IndexEntryImpl(theValue, theSortString, theValue, contents);
-        if (!theSortString.equals("")) {
-            indexEntry.setSortString(theSortString);
-        } else {
-            indexEntry.setSortString(null);
-        }
-        return indexEntry;
-    }
-
-    private static String stripFormatting(final String theValue) {
+    @VisibleForTesting
+    static String stripFormatting(final String theValue) {
         final int ltPos = theValue.indexOf(LT);
         final int gtPos = theValue.indexOf(GT);
         if ((ltPos == -1) && (gtPos == -1)) {
@@ -205,8 +192,9 @@ public final class IndexDitaProcessor {
         return stripFormatting(value);
     }
 
-    private static String normalizeTextValue(final String theString) {
-        if (null != theString && theString.length() > 0) {
+    @VisibleForTesting
+    static String normalizeTextValue(final String theString) {
+        if (null != theString && !theString.isEmpty()) {
             String res = theString.replaceAll("[\\s\\n]+", " ").trim();
             res = res.replaceAll("[\\s]+$", ""); //replace in the end of string
             return res;

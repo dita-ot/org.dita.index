@@ -92,7 +92,7 @@ public final class IndexPreprocessor {
         final DocumentBuilder documentBuilder = XMLUtils.getDocumentBuilder();
         final Document doc = documentBuilder.newDocument();
         final Node rootElement = input.getDocumentElement();
-        final ArrayList<IndexEntry> indexes = new ArrayList<>();
+        final List<IndexEntry> indexes = new ArrayList<>();
         final Node node = processCurrNode(rootElement, doc, indexes::add).get(0);
         doc.appendChild(node);
         doc.getDocumentElement().setAttribute(XMLNS_ATTRIBUTE + ":" + this.prefix, this.namespace_url);
@@ -191,7 +191,7 @@ public final class IndexPreprocessor {
             ditastyle = true;
         }
 
-        final ArrayList<Node> res = new ArrayList<>();
+        final List<Node> res = new ArrayList<>();
         if ((ditastyle)) {
             final List<IndexEntry> indexEntries = indexDitaProcessor.processIndexDitaNode(theNode, "");
 

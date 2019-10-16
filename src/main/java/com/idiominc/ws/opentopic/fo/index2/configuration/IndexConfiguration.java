@@ -114,7 +114,7 @@ public class IndexConfiguration {
                                 }
                             }
                             final String nodeValue = getNodeValue(membersChild);
-                            if (nodeValue.length() > 0) {
+                            if (!nodeValue.isEmpty()) {
                                 nodeValues.add(nodeValue);
                             }
                         }
