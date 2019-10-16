@@ -32,11 +32,7 @@ See the accompanying LICENSE file for applicable license.
  */
 
 /**
- * User: Ivan Luzyanin
- * Date: 21.06.2005
- * Time: 10:38:48
- * <br><br>
- * Respresents index group.
+ * Represents index group.
  */
 public interface IndexGroup {
 

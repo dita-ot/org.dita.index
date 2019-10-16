@@ -49,16 +49,16 @@ public final class IndexPreprocessor {
      * Index term level separator.
      */
     public static final String VALUE_SEPARATOR = ":";
-
-    private final String prefix;
-    private final String namespace_url;
-    private final Stack<Boolean> excludedDraftSection = new Stack<>();
-    private final IndexDitaProcessor indexDitaProcessor;
-    private final IndexGroupProcessor indexGroupProcessor;
-    private boolean includeDraft;
     private static final String elIndexRangeStartName = "start";
     private static final String elIndexRangeEndName = "end";
     private static final String hashPrefix = "indexid";
+
+    private final String prefix;
+    private final String namespace_url;
+    private final Deque<Boolean> excludedDraftSection = new ArrayDeque<>();
+    private final IndexDitaProcessor indexDitaProcessor;
+    private final IndexGroupProcessor indexGroupProcessor;
+    private boolean includeDraft;
 
     /**
      * Create new index preprocessor.
@@ -66,12 +66,12 @@ public final class IndexPreprocessor {
      * @param prefix           index prefix
      * @param theNamespace_url index element namespace URI
      */
-    public IndexPreprocessor(final String prefix, final String theNamespace_url, final String draftParameter) {
+    public IndexPreprocessor(final String prefix, final String theNamespace_url, final boolean includeDraft) {
         this.prefix = prefix;
         this.namespace_url = theNamespace_url;
         this.excludedDraftSection.clear();
         this.excludedDraftSection.add(false);
-        includeDraft = draftParameter.equals(ARGS_DRAFT_YES);
+        this.includeDraft = includeDraft;
         indexDitaProcessor = new IndexDitaProcessor();
         indexGroupProcessor = new IndexGroupProcessor();
     }
@@ -82,40 +82,33 @@ public final class IndexPreprocessor {
     }
 
     /**
-     * Process index terms.
+     * Process index terms. Walks through source document and builds an array of IndexEntry and builds a new document
+     * with pre-processed index entries included.
      *
-     * @param theInput input document
+     * @param input input document
      * @return read index terms
      */
-    public IndexPreprocessResult process(final Document theInput) {
+    public IndexPreprocessResult process(final Document input) {
         final DocumentBuilder documentBuilder = XMLUtils.getDocumentBuilder();
         final Document doc = documentBuilder.newDocument();
-
-        final Node rootElement = theInput.getDocumentElement();
-
+        final Node rootElement = input.getDocumentElement();
         final ArrayList<IndexEntry> indexes = new ArrayList<>();
-
-        final IndexEntryFoundListener listener = indexes::add;
-
-        final Node node = processCurrNode(rootElement, doc, listener)[0];
-
+        final Node node = processCurrNode(rootElement, doc, indexes::add)[0];
         doc.appendChild(node);
-
         doc.getDocumentElement().setAttribute(XMLNS_ATTRIBUTE + ":" + this.prefix, this.namespace_url);
-
         return new IndexPreprocessResult(doc, indexes.toArray(new IndexEntry[0]));
     }
 
-    public void createAndAddIndexGroups(final IndexEntry[] theIndexEntries, final IndexConfiguration theConfiguration, final Document theDocument, final Locale theLocale) {
+    /**
+     * Append index groups to the end of document
+     */
+    public void createAndAddIndexGroups(final IndexEntry[] theIndexEntries, final IndexConfiguration theConfiguration,
+                                        final Document theDocument, final Locale theLocale) {
         final IndexComparator indexEntryComparator = new IndexComparator(theLocale);
-
         final IndexGroup[] indexGroups = indexGroupProcessor.process(theIndexEntries, theConfiguration, theLocale);
-
         final Element rootElement = theDocument.getDocumentElement();
-
         final Element indexGroupsElement = theDocument.createElementNS(namespace_url, "index.groups");
         indexGroupsElement.setPrefix(prefix);
-
         for (final IndexGroup group : indexGroups) {
             //Create group element
             final Node groupElement = theDocument.createElementNS(namespace_url, "index.group");
@@ -125,15 +118,12 @@ public final class IndexPreprocessor {
             groupLabelElement.setPrefix(prefix);
             groupLabelElement.appendChild(theDocument.createTextNode(group.getLabel()));
             groupElement.appendChild(groupLabelElement);
-
             final Node[] entryNodes = transformToNodes(group.getEntries(), theDocument, indexEntryComparator);
             for (final Node entryNode : entryNodes) {
                 groupElement.appendChild(entryNode);
             }
-
             indexGroupsElement.appendChild(groupElement);
         }
-
         rootElement.appendChild(indexGroupsElement);
     }
 

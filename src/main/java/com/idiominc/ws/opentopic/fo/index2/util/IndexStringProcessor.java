@@ -47,11 +47,9 @@ public abstract class IndexStringProcessor {
      * @return IndexEntry objects created from the index string
      */
     public static IndexEntry[] processIndexString(final String theIndexMarkerString, final List<Node> contents) {
-        final IndexEntryImpl indexEntry = createIndexEntry(theIndexMarkerString, contents, null, false);
-        String referenceIDBuf = indexEntry.getValue() +
-                VALUE_SEPARATOR;
+        final IndexEntry indexEntry = createIndexEntry(theIndexMarkerString, contents, null, false);
+        final String referenceIDBuf = indexEntry.getValue() + VALUE_SEPARATOR;
         indexEntry.addRefID(referenceIDBuf);
-
         return new IndexEntry[]{indexEntry};
     }
 
@@ -68,16 +66,13 @@ public abstract class IndexStringProcessor {
         return theString;
     }
 
-    private static IndexEntryImpl createIndexEntry(String theValue, final List<Node> contents, final String theSortString, final boolean theIsParentNoPage) {
-        final boolean restoresPageNumber = false;
-        final boolean startsRange = false;
-        final boolean endsRange = false;
-
-        final IndexEntryImpl indexEntry = new IndexEntryImpl(theValue, theSortString, theValue, contents);
+    private static IndexEntry createIndexEntry(final String theValue, final List<Node> contents,
+                                               final String theSortString, final boolean theIsParentNoPage) {
+        final IndexEntry indexEntry = new IndexEntryImpl(theValue, theSortString, theValue, contents);
         indexEntry.setSuppressesThePageNumber(theIsParentNoPage);
-        indexEntry.setRestoresPageNumber(restoresPageNumber);
-        indexEntry.setStartRange(startsRange);
-        indexEntry.setEndsRange(endsRange);
+        indexEntry.setRestoresPageNumber(false);
+        indexEntry.setStartRange(false);
+        indexEntry.setEndsRange(false);
         indexEntry.setSortString(theSortString);
         return indexEntry;
     }

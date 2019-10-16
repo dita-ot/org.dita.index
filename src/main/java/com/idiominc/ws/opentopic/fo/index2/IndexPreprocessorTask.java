@@ -1,6 +1,7 @@
 package com.idiominc.ws.opentopic.fo.index2;
 
 import com.idiominc.ws.opentopic.fo.index2.configuration.IndexConfiguration;
+import com.idiominc.ws.opentopic.fo.index2.configuration.ParseException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -8,6 +9,7 @@ import org.apache.tools.ant.types.XMLCatalog;
 import org.dita.dost.log.DITAOTAntLogger;
 import org.dita.dost.util.XMLUtils;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.OutputKeys;
@@ -15,10 +17,11 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Locale;
-
-import static org.dita.dost.util.Constants.ARGS_DRAFT_NO;
 
 /*
 Copyright (c) 2004-2006 by Idiom Technologies, Inc. All rights reserved.
@@ -50,61 +53,57 @@ with those set forth herein.
 This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
  */
-public class IndexPreprocessorTask
-        extends Task {
-    //    private String input = null;
-    private String input = "";
-    private String output = "";
-    private XMLCatalog xmlcatalog;
-    private String locale = "ja";
-    private String indexConfig = "";
-    private String draft = ARGS_DRAFT_NO;
+public class IndexPreprocessorTask extends Task {
+
+    private static final String PREFIX = "opentopic-index";
+    private static final String NAMESPACE_URL = "http://www.idiominc.com/opentopic/index";
+
     public static boolean failOnError = false;
     public static boolean processingFaild = false;
-    private static final String prefix = "opentopic-index";
-    private static final String namespace_url = "http://www.idiominc.com/opentopic/index";
 
-    public static void main(final String[] args) {
-        new IndexPreprocessorTask().execute();
-    }
+    private File input;
+    private File output;
+    private XMLCatalog xmlcatalog;
+    private Locale locale;
+    private File indexConfig;
+    private boolean draft;
 
     @Override
-    public void execute()
-            throws BuildException {
+    public void execute() throws BuildException {
         checkParameters();
 
+        final DocumentBuilder documentBuilder = XMLUtils.getDocumentBuilder();
+        documentBuilder.setEntityResolver(xmlcatalog);
+
+        final Document doc;
         try {
-            final DocumentBuilder documentBuilder = XMLUtils.getDocumentBuilder();
-            documentBuilder.setEntityResolver(xmlcatalog);
+            doc = documentBuilder.parse(input);
+        } catch (SAXException | IOException e) {
+            throw new BuildException(e);
+        }
 
-            final Document doc = documentBuilder.parse(input);
-            final IndexPreprocessor preprocessor = new IndexPreprocessor(prefix, namespace_url, this.draft);
-            preprocessor.setLogger(new DITAOTAntLogger(getProject()));
+        final IndexConfiguration configuration;
+        try {
+            final Document configDocument = documentBuilder.parse(indexConfig);
+            configuration = IndexConfiguration.parse(configDocument);
+        } catch (ParseException | SAXException | IOException e) {
+            throw new BuildException(e);
+        }
 
-            // Walks through source document and builds an array of IndexEntry and builds
-            // new Document with pre-processed index entries included.
-            final IndexPreprocessResult result = preprocessor.process(doc);
+        final IndexPreprocessor preprocessor = new IndexPreprocessor(PREFIX, NAMESPACE_URL, draft);
+        preprocessor.setLogger(new DITAOTAntLogger(getProject()));
 
-            final Document resultDoc = result.getDocument();
+        final IndexPreprocessResult result = preprocessor.process(doc);
+        final Document resultDoc = result.document;
 
-            // Parse index configuration from file specified from ANT script
-            final IndexConfiguration configuration = IndexConfiguration.parse(documentBuilder.parse(this.indexConfig));
-            final IndexEntry[] indexEntries = result.getIndexEntries();
+        final IndexEntry[] indexEntries = result.indexEntries;
+        preprocessor.createAndAddIndexGroups(indexEntries, configuration, resultDoc, locale);
+        if (processingFaild) {
+            setActiveProjectProperty("ws.runtime.index.preprocess.fail", "true");
+        }
 
-            Locale loc;
-            // Split passed locale string to lang and country codes
-            if (locale.indexOf("-") == 2 || locale.indexOf("_") == 2) {
-                loc = new Locale(locale.substring(0, 2), locale.substring(3));
-            } else {
-                loc = new Locale(this.locale);
-            }
-            // Append index groups to the end of document
-            preprocessor.createAndAddIndexGroups(indexEntries, configuration, resultDoc, loc);
-
-            if (processingFaild) {
-                setActiveProjectProperty("ws.runtime.index.preprocess.fail", "true");
-            }
-            // Serialize processed document
+        // Serialize processed document
+        try (OutputStream out = new FileOutputStream(output)) {
             final TransformerFactory transformerFactory = TransformerFactory.newInstance();
             final Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
@@ -119,12 +118,11 @@ public class IndexPreprocessorTask
                     transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doc.getDoctype().getSystemId());
                 }
             }
-            final FileOutputStream out = new FileOutputStream(this.output);
+
+            final DOMSource source = new DOMSource(resultDoc);
             final StreamResult streamResult = new StreamResult(out);
-            transformer.transform(new DOMSource(resultDoc), streamResult);
-            out.close();
+            transformer.transform(source, streamResult);
         } catch (final Exception e) {
-            e.printStackTrace();
             throw new BuildException(e);
         }
     }
@@ -136,31 +134,36 @@ public class IndexPreprocessorTask
         }
     }
 
-    public void setInput(final String theInput) {
-        this.input = theInput;
+    public void setInput(final File input) {
+        this.input = input;
     }
 
-    public void setOutput(final String theOutput) {
-        this.output = theOutput;
+    public void setOutput(final File output) {
+        this.output = output;
     }
 
     public void addConfiguredXmlcatalog(final XMLCatalog xmlcatalog) {
         this.xmlcatalog = xmlcatalog;
     }
 
-    public void setLocale(final String theLocale) {
-        this.locale = theLocale;
+    public void setLocale(final String locale) {
+        if (locale.indexOf("-") == 2 || locale.indexOf("_") == 2) {
+            this.locale = new Locale(locale.substring(0, 2), locale.substring(3));
+        } else {
+            this.locale = new Locale(locale);
+        }
+
     }
 
-    public void setIndexConfig(final String theIndexConfig) {
-        this.indexConfig = theIndexConfig;
+    public void setIndexConfig(final File indexConfig) {
+        this.indexConfig = indexConfig;
     }
 
-    public void setFailOnError(final String theFailOnErro) {
-        failOnError = theFailOnErro.equals("true");
+    public void setFailOnError(final boolean failOnError) {
+        IndexPreprocessorTask.failOnError = failOnError;
     }
 
-    public void setDraft(final String draftValue) {
+    public void setDraft(final boolean draftValue) {
         this.draft = draftValue;
     }
 

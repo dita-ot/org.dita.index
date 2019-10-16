@@ -3,10 +3,7 @@ package com.idiominc.ws.opentopic.fo.index2.util;
 import com.idiominc.ws.opentopic.fo.index2.IndexEntry;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /*
 Copyright (c) 2004-2006 by Idiom Technologies, Inc. All rights reserved.
@@ -45,9 +42,9 @@ class IndexEntryImpl implements IndexEntry {
     private final List<Node> contents;
     private String sortString;
 
-    private final HashMap<String, IndexEntry> childs = new HashMap<>();
-    private final HashMap<String, IndexEntry> seeChilds = new HashMap<>();
-    private final HashMap<String, IndexEntry> seeAlsoChilds = new HashMap<>();
+    private final Map<String, IndexEntry> childs = new HashMap<>();
+    private final Map<String, IndexEntry> seeChilds = new HashMap<>();
+    private final Map<String, IndexEntry> seeAlsoChilds = new HashMap<>();
 
     private boolean startRange = false;
     private boolean endsRange = false;

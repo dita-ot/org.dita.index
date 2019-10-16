@@ -31,7 +31,7 @@ This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
  */
 
-class ParseException extends Exception {
+public class ParseException extends Exception {
 
     public ParseException() {
     }

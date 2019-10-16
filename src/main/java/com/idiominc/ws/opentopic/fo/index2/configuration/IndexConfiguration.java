@@ -52,8 +52,7 @@ public class IndexConfiguration {
         this.entries.add(theEntry);
     }
 
-    public static IndexConfiguration parse(final Document theDocument)
-            throws ParseException {
+    public static IndexConfiguration parse(final Document theDocument) throws ParseException {
         String message = "Invalid configuration format";
 
         final IndexConfiguration indexConfiguration = new IndexConfiguration();

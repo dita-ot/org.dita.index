@@ -66,7 +66,6 @@ public final class IndexDitaProcessor {
      * @return index entries
      */
     public IndexEntry[] processIndexDitaNode(final Node theNode, final String theParentValue) {
-
         final NodeList childNodes = theNode.getChildNodes();
         final StringBuilder textValueBuffer = new StringBuilder();
         final List<Node> contents = new ArrayList<>();

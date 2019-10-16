@@ -33,19 +33,11 @@ This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
  */
 public class IndexPreprocessResult {
-    private final Document document;
-    private final IndexEntry[] indexEntries;
+    public final Document document;
+    public final IndexEntry[] indexEntries;
 
     public IndexPreprocessResult(final Document theDocument, final IndexEntry[] theIndexEntries) {
         document = theDocument;
         indexEntries = theIndexEntries;
-    }
-
-    public Document getDocument() {
-        return document;
-    }
-
-    public IndexEntry[] getIndexEntries() {
-        return indexEntries;
     }
 }
