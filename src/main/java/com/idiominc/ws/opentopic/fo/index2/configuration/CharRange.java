@@ -5,6 +5,7 @@
  *
  * See the accompanying LICENSE file for applicable license.
  */
+
 package com.idiominc.ws.opentopic.fo.index2.configuration;
 
 import com.idiominc.ws.opentopic.fo.index2.IndexCollator;

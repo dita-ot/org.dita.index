@@ -1,5 +1,3 @@
-package com.idiominc.ws.opentopic.fo.index2;
-
 /*
 Copyright (c) 2004-2006 by Idiom Technologies, Inc. All rights reserved.
 IDIOM is a registered trademark of Idiom Technologies, Inc. and WORLDSERVER
@@ -30,6 +28,9 @@ with those set forth herein.
 This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
  */
+
+package com.idiominc.ws.opentopic.fo.index2;
+
 interface IndexEntryFoundListener {
     /**
      * Notifies that the new index entry was found

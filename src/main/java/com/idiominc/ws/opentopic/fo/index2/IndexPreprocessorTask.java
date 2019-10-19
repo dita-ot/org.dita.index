@@ -1,29 +1,3 @@
-package com.idiominc.ws.opentopic.fo.index2;
-
-import com.idiominc.ws.opentopic.fo.index2.configuration.IndexConfiguration;
-import com.idiominc.ws.opentopic.fo.index2.configuration.ParseException;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.XMLCatalog;
-import org.dita.dost.log.DITAOTAntLogger;
-import org.dita.dost.util.XMLUtils;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collection;
-import java.util.Locale;
-
 /*
 Copyright (c) 2004-2006 by Idiom Technologies, Inc. All rights reserved.
 IDIOM is a registered trademark of Idiom Technologies, Inc. and WORLDSERVER
@@ -54,6 +28,33 @@ with those set forth herein.
 This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
  */
+
+package com.idiominc.ws.opentopic.fo.index2;
+
+import com.idiominc.ws.opentopic.fo.index2.configuration.IndexConfiguration;
+import com.idiominc.ws.opentopic.fo.index2.configuration.ParseException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.XMLCatalog;
+import org.dita.dost.log.DITAOTAntLogger;
+import org.dita.dost.util.XMLUtils;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Locale;
+
 public class IndexPreprocessorTask extends Task {
 
     private static final String PREFIX = "opentopic-index";
