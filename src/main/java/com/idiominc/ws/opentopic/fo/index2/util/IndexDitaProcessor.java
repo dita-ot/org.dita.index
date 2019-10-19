@@ -50,6 +50,8 @@ import static org.dita.dost.util.XMLUtils.toList;
 
 public final class IndexDitaProcessor {
 
+    private static final String ATTR_START = "start";
+    private static final String ATTR_END = "end";
     private static final String LT = "<";
     private static final String GT = ">";
     private static final String SORT_START = "[";
@@ -73,10 +75,8 @@ public final class IndexDitaProcessor {
         final StringBuilder textValueBuffer = new StringBuilder();
         final List<Node> contents = new ArrayList<>();
         final StringBuilder sortStringBuffer = new StringBuilder();
-        final String elIndexRangeStartName = "start";
-        final boolean startRange = node.getAttributes().getNamedItem(elIndexRangeStartName) != null;
-        final String elIndexRangeEndName = "end";
-        final boolean endRange = node.getAttributes().getNamedItem(elIndexRangeEndName) != null;
+        final boolean startRange = node.getAttributes().getNamedItem(ATTR_START) != null;
+        final boolean endRange = node.getAttributes().getNamedItem(ATTR_END) != null;
         final List<IndexEntry> childEntrys = new ArrayList<>();
         final List<IndexEntry> seeEntry = new ArrayList<>();
         final List<IndexEntry> seeAlsoEntry = new ArrayList<>();
@@ -153,9 +153,9 @@ public final class IndexDitaProcessor {
             result.setStartRange(startRange);
             result.setEndsRange(endRange);
             if (startRange) {
-                result.addRefID(node.getAttributes().getNamedItem(elIndexRangeStartName).getNodeValue());
+                result.addRefID(node.getAttributes().getNamedItem(ATTR_START).getNodeValue());
             } else if (endRange) {
-                result.addRefID(node.getAttributes().getNamedItem(elIndexRangeEndName).getNodeValue());
+                result.addRefID(node.getAttributes().getNamedItem(ATTR_END).getNodeValue());
             } else {
                 result.addRefID(normalizeTextValue(parentValue + textValue + VALUE_SEPARATOR));
             }
