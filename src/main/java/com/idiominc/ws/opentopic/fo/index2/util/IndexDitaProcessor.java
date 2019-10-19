@@ -63,19 +63,19 @@ public final class IndexDitaProcessor {
     /**
      * Read index terms from source XML.
      *
-     * @param theNode        source indexterm element
-     * @param theParentValue parent value
+     * @param node        source indexterm element
+     * @param parentValue parent value
      * @return index entries
      */
-    public List<IndexEntry> processIndexDitaNode(final Node theNode, final String theParentValue) {
-        final NodeList childNodes = theNode.getChildNodes();
+    public List<IndexEntry> processIndexDitaNode(final Node node, final String parentValue) {
+        final NodeList childNodes = node.getChildNodes();
         final StringBuilder textValueBuffer = new StringBuilder();
         final List<Node> contents = new ArrayList<>();
         final StringBuilder sortStringBuffer = new StringBuilder();
         final String elIndexRangeStartName = "start";
-        final boolean startRange = theNode.getAttributes().getNamedItem(elIndexRangeStartName) != null;
+        final boolean startRange = node.getAttributes().getNamedItem(elIndexRangeStartName) != null;
         final String elIndexRangeEndName = "end";
-        final boolean endRange = theNode.getAttributes().getNamedItem(elIndexRangeEndName) != null;
+        final boolean endRange = node.getAttributes().getNamedItem(elIndexRangeEndName) != null;
         final List<IndexEntry> childEntrys = new ArrayList<>();
         final List<IndexEntry> seeEntry = new ArrayList<>();
         final List<IndexEntry> seeAlsoEntry = new ArrayList<>();
@@ -94,7 +94,7 @@ public final class IndexDitaProcessor {
                     if (TOPIC_INDEXTERM.matches(child)) {
                         final String currentTextValue = normalizeTextValue(textValueBuffer.toString());
                         final String currentRefId = currentTextValue.isEmpty() ? "" : (currentTextValue + VALUE_SEPARATOR);
-                        childEntrys.addAll(processIndexDitaNode(child, theParentValue + currentRefId));
+                        childEntrys.addAll(processIndexDitaNode(child, parentValue + currentRefId));
                     } else if (INDEXING_D_INDEX_SORT_AS.matches(child)) {
                         final List<Node> children = toList(child.getChildNodes());
                         for (final Node sortChildNode : children) {
@@ -119,9 +119,9 @@ public final class IndexDitaProcessor {
         /*
         if (normalizeTextValue(textValueBuffer.toString()).length() == 0) {
             if (startRange) {
-                textValueBuffer.append(theNode.getAttributes().getNamedItem(elIndexRangeStartName).getNodeValue());
+                textValueBuffer.append(node.getAttributes().getNamedItem(elIndexRangeStartName).getNodeValue());
             } else if (endRange) {
-                textValueBuffer.append(theNode.getAttributes().getNamedItem(elIndexRangeEndName).getNodeValue());
+                textValueBuffer.append(node.getAttributes().getNamedItem(elIndexRangeEndName).getNodeValue());
             }
         }
          */
@@ -152,11 +152,11 @@ public final class IndexDitaProcessor {
             result.setStartRange(startRange);
             result.setEndsRange(endRange);
             if (startRange) {
-                result.addRefID(theNode.getAttributes().getNamedItem(elIndexRangeStartName).getNodeValue());
+                result.addRefID(node.getAttributes().getNamedItem(elIndexRangeStartName).getNodeValue());
             } else if (endRange) {
-                result.addRefID(theNode.getAttributes().getNamedItem(elIndexRangeEndName).getNodeValue());
+                result.addRefID(node.getAttributes().getNamedItem(elIndexRangeEndName).getNodeValue());
             } else {
-                result.addRefID(normalizeTextValue(theParentValue + textValue + VALUE_SEPARATOR));
+                result.addRefID(normalizeTextValue(parentValue + textValue + VALUE_SEPARATOR));
             }
             if (!seeEntry.isEmpty()) {
                 for (final IndexEntry seeIndexEntry : seeEntry) {

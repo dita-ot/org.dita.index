@@ -50,20 +50,20 @@ public final class IndexGroupProcessor {
     /**
      * Puts index entries to the group they are belongs
      *
-     * @param theIndexEntries       index entries
-     * @param theIndexConfiguration index configuration
-     * @param theLocale             locale used to sort and compare index entries
+     * @param indexEntries       index entries
+     * @param indexConfiguration index configuration
+     * @param locale             locale used to sort and compare index entries
      * @return groups with sorted index entries inside
      */
-    public List<IndexGroup> process(final Collection<IndexEntry> theIndexEntries, final IndexConfiguration theIndexConfiguration,
-                                final Locale theLocale) {
-        final IndexCollator collator = new IndexCollator(theLocale);
+    public List<IndexGroup> process(final Collection<IndexEntry> indexEntries, final IndexConfiguration indexConfiguration,
+                                    final Locale locale) {
+        final IndexCollator collator = new IndexCollator(locale);
 
         final List<IndexGroupImpl> result = new ArrayList<>();
 
-        final List<ConfigEntry> entries = theIndexConfiguration.getEntries();
+        final List<ConfigEntry> entries = indexConfiguration.getEntries();
 
-        final Map<String, IndexEntry> indexMap = createMap(theIndexEntries);
+        final Map<String, IndexEntry> indexMap = createMap(indexEntries);
 
         //Creating array of index groups
         for (final ConfigEntry configEntry : entries) {

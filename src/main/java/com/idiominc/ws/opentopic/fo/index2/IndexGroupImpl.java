@@ -25,10 +25,12 @@ class IndexGroupImpl implements IndexGroup {
         this.configEntry = configEntry;
     }
 
+    @Override
     public String getLabel() {
         return this.label;
     }
 
+    @Override
     public Collection<IndexEntry> getEntries() {
         return entries;
     }
@@ -37,6 +39,7 @@ class IndexGroupImpl implements IndexGroup {
         return this.configEntry;
     }
 
+    @Override
     public void addEntry(final IndexEntry theEntry) {
         boolean isInserted = false;
         if (!childList.isEmpty()) {
@@ -54,7 +57,7 @@ class IndexGroupImpl implements IndexGroup {
             this.entries.add(theEntry);
         }
     }
-
+    
     public boolean doesStart(final String sourceString, final List<String> compStrings) {
         for (final String compString : compStrings) {
             if (sourceString.startsWith(compString)) {

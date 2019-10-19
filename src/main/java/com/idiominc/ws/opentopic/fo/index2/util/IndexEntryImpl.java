@@ -35,6 +35,10 @@ with those set forth herein.
 This file is part of the DITA Open Toolkit project.
 See the accompanying LICENSE file for applicable license.
  */
+
+/**
+ * Mutable index entry.
+ */
 public class IndexEntryImpl implements IndexEntry {
 
     private final String value;
@@ -51,7 +55,7 @@ public class IndexEntryImpl implements IndexEntry {
     private boolean suppressesThePageNumber = false;
     private boolean restoresPageNumber = false;
 
-    private final List<String> refIDs = new ArrayList<>();
+    private final Set<String> refIDs = new HashSet<>();
 
     /**
      * Index entry constructor.
@@ -71,51 +75,60 @@ public class IndexEntryImpl implements IndexEntry {
 
     @Override
     public Set<String> getRefIDs() {
-        return new HashSet(refIDs);
+        return refIDs;
     }
 
+    @Override
     public String getValue() {
         return value;
     }
 
+    @Override
     public String getFormattedString() {
         return formattedString;
     }
 
+    @Override
     public List<Node> getContents() {
         return contents;
     }
 
+    @Override
     public String getSortString() {
         return sortString;
     }
 
+    @Override
     public List<IndexEntry> getChildIndexEntries() {
         return new ArrayList(childs.values());
     }
 
+    @Override
     public boolean isStartingRange() {
         return startRange;
     }
 
+    @Override
     public boolean isEndingRange() {
         return endsRange;
     }
 
+    @Override
     public boolean isSuppressesThePageNumber() {
         return suppressesThePageNumber;
     }
 
+    @Override
     public boolean isRestoresPageNumber() {
         return restoresPageNumber;
     }
 
+    @Override
     public void addRefID(final String theID) {
-        if (!refIDs.contains(theID)) {
-            refIDs.add(theID);
-        }
+        refIDs.add(theID);
     }
 
+    @Override
     public void addSeeChild(final IndexEntry entry) {
         final String entryValue = entry.getValue();
         if (!seeChilds.containsKey(entryValue)) {
@@ -145,6 +158,7 @@ public class IndexEntryImpl implements IndexEntry {
         }
     }
 
+    @Override
     public void addSeeAlsoChild(final IndexEntry entry) {
         final String entryValue = entry.getValue();
         if (!seeAlsoChilds.containsKey(entryValue)) {
@@ -174,6 +188,7 @@ public class IndexEntryImpl implements IndexEntry {
         }
     }
 
+    @Override
     public void addChild(final IndexEntry entry) {
         final String entryValue = entry.getValue();
         if (!childs.containsKey(entryValue)) {
@@ -203,43 +218,50 @@ public class IndexEntryImpl implements IndexEntry {
         }
     }
 
+    @Override
     public void setSortString(final String sortString) {
         this.sortString = sortString;
     }
 
-    public void setStartRange(final boolean theStartRange) {
-        if (theStartRange && endsRange) {
+    @Override
+    public void setStartRange(final boolean startRange) {
+        if (startRange && endsRange) {
             endsRange = false;
         }
-        startRange = theStartRange;
+        this.startRange = startRange;
     }
 
-    public void setEndsRange(final boolean theEndsRange) {
-        if (theEndsRange && startRange) {
+    @Override
+    public void setEndsRange(final boolean endsRange) {
+        if (endsRange && startRange) {
             startRange = false;
         }
-        endsRange = theEndsRange;
+        this.endsRange = endsRange;
     }
 
-    public void setSuppressesThePageNumber(final boolean theSuppressesThePageNumber) {
-        if (theSuppressesThePageNumber && restoresPageNumber) {
+    @Override
+    public void setSuppressesThePageNumber(final boolean suppressesThePageNumber) {
+        if (suppressesThePageNumber && restoresPageNumber) {
             restoresPageNumber = false;
         }
 
-        suppressesThePageNumber = theSuppressesThePageNumber;
+        this.suppressesThePageNumber = suppressesThePageNumber;
     }
 
-    public void setRestoresPageNumber(final boolean theRestoresPageNumber) {
-        if (theRestoresPageNumber && suppressesThePageNumber) {
+    @Override
+    public void setRestoresPageNumber(final boolean restoresPageNumber) {
+        if (restoresPageNumber && suppressesThePageNumber) {
             suppressesThePageNumber = false;
         }
-        restoresPageNumber = theRestoresPageNumber;
+        this.restoresPageNumber = restoresPageNumber;
     }
 
+    @Override
     public List<IndexEntry> getSeeChildIndexEntries() {
         return new ArrayList(seeChilds.values());
     }
 
+    @Override
     public List<IndexEntry> getSeeAlsoChildIndexEntries() {
         return new ArrayList(seeAlsoChilds.values());
     }
