@@ -1,5 +1,6 @@
 package com.idiominc.ws.opentopic.fo.index2.configuration;
 
+import org.dita.dost.util.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -49,45 +50,40 @@ public class IndexConfiguration {
         return entries;
     }
 
-    private void addEntry(final ConfigEntry theEntry) {
-        this.entries.add(theEntry);
+    private void addEntry(final ConfigEntry entry) {
+        this.entries.add(entry);
     }
 
-    public static IndexConfiguration parse(final Document theDocument) throws ParseException {
+    public static IndexConfiguration parse(final Document document) throws ParseException {
         String message = "Invalid configuration format";
 
         final IndexConfiguration indexConfiguration = new IndexConfiguration();
 
-        final NodeList indexConfigurationSet = theDocument.getElementsByTagName("index.configuration.set");
+        final NodeList indexConfigurationSet = document.getElementsByTagName("index.configuration.set");
         if (indexConfigurationSet.getLength() != 1) {
             throw new ParseException(message);
         }
         final Node indexConfigurationSetNode = indexConfigurationSet.item(0);
-
         if (indexConfigurationSetNode == null) {
             throw new ParseException(message);
         }
 
-        final Node indexConf = getNodeByName("index.configuration", indexConfigurationSetNode.getChildNodes());
-
+        final Node indexConf = getFirstNodeByName("index.configuration", indexConfigurationSetNode.getChildNodes());
         if (indexConf == null) {
             throw new ParseException(message);
         }
 
-        final Node indexGroups = getNodeByName("index.groups", indexConf.getChildNodes());
-
+        final Node indexGroups = getFirstNodeByName("index.groups", indexConf.getChildNodes());
         if (indexGroups == null) {
             throw new ParseException(message);
         }
 
-        final NodeList indexGroupChilds = indexGroups.getChildNodes();
-
-        for (int i = 0; i < indexGroupChilds.getLength(); i++) {
-            final Node node = indexGroupChilds.item(i);
-            if ("index.group".equals(node.getNodeName())) {
-                final Node key = getNodeByName("group.key", node.getChildNodes());
-                final Node label = getNodeByName("group.label", node.getChildNodes());
-                final Node members = getNodeByName("group.members", node.getChildNodes());
+        final List<Node> indexGroupChilds = XMLUtils.toList(indexGroups.getChildNodes());
+        for (final Node node : indexGroupChilds) {
+            if (node.getNodeName().equals("index.group")) {
+                final Node key = getFirstNodeByName("group.key", node.getChildNodes());
+                final Node label = getFirstNodeByName("group.label", node.getChildNodes());
+                final Node members = getFirstNodeByName("group.members", node.getChildNodes());
 
                 final String keyValue = getNodeValue(key);
                 final String labelValue = getNodeValue(label);
@@ -100,7 +96,7 @@ public class IndexConfiguration {
                     final NodeList membersChilds = members.getChildNodes();
                     for (int j = 0; j < membersChilds.getLength(); j++) {
                         final Node membersChild = membersChilds.item(j);
-                        if ("char.set".equals(membersChild.getNodeName())) {
+                        if (membersChild.getNodeName().equals("char.set")) {
                             if (membersChild.hasAttributes() && membersChild.getAttributes() != null) {
                                 final Node startRange = membersChild.getAttributes().getNamedItem("start-range");
                                 final Node endRange = membersChild.getAttributes().getNamedItem("end-range");
@@ -132,12 +128,12 @@ public class IndexConfiguration {
         return indexConfiguration;
     }
 
-    private static String getNodeValue(final Node theNode) {
-        if (theNode.getNodeType() == Node.TEXT_NODE) {
-            return theNode.getNodeValue().trim();
+    private static String getNodeValue(final Node node) {
+        if (node.getNodeType() == Node.TEXT_NODE) {
+            return node.getNodeValue().trim();
         } else {
             final StringBuilder res = new StringBuilder();
-            final NodeList childNodes = theNode.getChildNodes();
+            final NodeList childNodes = node.getChildNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {
                 final String nodeValue = getNodeValue(childNodes.item(i));
                 res.append(nodeValue);
@@ -146,10 +142,10 @@ public class IndexConfiguration {
         }
     }
 
-    private static Node getNodeByName(final String theNodeName, final NodeList theNodeList) {
-        for (int i = 0; i < theNodeList.getLength(); i++) {
-            final Node node = theNodeList.item(i);
-            if (theNodeName.equals(node.getNodeName())) {
+    private static Node getFirstNodeByName(final String nodeName, final NodeList nodeList) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            final Node node = nodeList.item(i);
+            if (nodeName.equals(node.getNodeName())) {
                 return node;
             }
         }

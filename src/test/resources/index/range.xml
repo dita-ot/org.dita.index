@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index.configuration.set>
+  <index.configuration>
+    <language>en</language>
+    <index.groups>
+      <index.group>
+        <group.key>A</group.key>
+        <group.label>A</group.label>
+        <group.members>
+          <char.set start-range="b" end-range="d"/>
+        </group.members>
+      </index.group>
+    </index.groups>
+  </index.configuration>
+</index.configuration.set>
