@@ -9,7 +9,10 @@
 package com.idiominc.ws.opentopic.fo.index2.util;
 
 import com.idiominc.ws.opentopic.fo.index2.IndexEntry;
+import org.dita.dost.log.DITAOTLogger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.Marker;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -33,6 +36,7 @@ public class IndexDitaProcessorTest {
     public IndexDitaProcessorTest() throws ParserConfigurationException {
         builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         processor = new IndexDitaProcessor();
+        processor.setLogger(new DummyLogger());
     }
 
     @Test
@@ -47,6 +51,27 @@ public class IndexDitaProcessorTest {
         assertEquals(null, entry.getSortString());
         assertEquals("Foo Bar", entry.getFormattedString());
         assertEquals(Collections.singleton("Foo Bar:"), entry.getRefIDs());
+    }
+
+    @Test
+    public void processIndexDitaNode_framemaker() {
+        final Node node = getNode("<indexterm class='- topic/indexterm '>Foo [foo]</indexterm>");
+        final List<IndexEntry> indexEntries = processor.processIndexDitaNode(node, "");
+        assertEquals(1, indexEntries.size());
+
+        final IndexEntry entry = indexEntries.get(0);
+        assertEquals(0, entry.getChildIndexEntries().size());
+        assertEquals("Foo ", entry.getValue());
+        assertEquals("foo", entry.getSortString());
+        assertEquals("Foo ", entry.getFormattedString());
+        assertEquals(Collections.singleton("Foo :"), entry.getRefIDs());
+    }
+
+    @Test
+    public void processIndexDitaNode_empty() {
+        final Node node = getNode("<indexterm class='- topic/indexterm '>  </indexterm>");
+        final List<IndexEntry> indexEntries = processor.processIndexDitaNode(node, "");
+        assertEquals(0, indexEntries.size());
     }
 
     @Test
@@ -96,6 +121,82 @@ public class IndexDitaProcessorTest {
         assertEquals(null, child.getSortString());
         assertEquals("Bar", child.getFormattedString());
         assertEquals(Collections.singleton("Foo:Bar:"), child.getRefIDs());
+    }
+
+    @Test
+    public void processIndexDitaNode_see() {
+        final Node node = getNode("<indexterm class='- topic/indexterm '>Foo<index-see class='+ topic/index-base indexing-d/index-see '>Bar</index-see><index-see-also class='+ topic/index-base indexing-d/index-see-also '>Baz</index-see-also></indexterm>");
+        final List<IndexEntry> indexEntries = processor.processIndexDitaNode(node, "");
+        assertEquals(1, indexEntries.size());
+
+        final IndexEntry entry = indexEntries.get(0);
+        assertEquals(0, entry.getChildIndexEntries().size());
+        assertEquals("Foo", entry.getValue());
+        assertEquals(null, entry.getSortString());
+        assertEquals("Foo", entry.getFormattedString());
+        assertEquals(Collections.singleton("Foo:"), entry.getRefIDs());
+
+        final IndexEntry see = entry.getSeeChildIndexEntries().get(0);
+        assertEquals(0, see.getChildIndexEntries().size());
+        assertEquals("Bar", see.getValue());
+        assertEquals(null, see.getSortString());
+        assertEquals("Bar", see.getFormattedString());
+        assertEquals(Collections.singleton("Bar:"), see.getRefIDs());
+
+        final IndexEntry seeAlso = entry.getSeeAlsoChildIndexEntries().get(0);
+        assertEquals(0, seeAlso.getChildIndexEntries().size());
+        assertEquals("Baz", seeAlso.getValue());
+        assertEquals(null, seeAlso.getSortString());
+        assertEquals("Baz", seeAlso.getFormattedString());
+        assertEquals(Collections.singleton("Baz:"), seeAlso.getRefIDs());
+    }
+
+    @Test
+    public void processIndexDitaNode_mixed() {
+        final Node node = getNode("<indexterm class='- topic/indexterm '>Foo<indexterm class='- topic/indexterm '>Qux</indexterm><index-see class='+ topic/index-base indexing-d/index-see '>Bar</index-see><index-see-also class='+ topic/index-base indexing-d/index-see-also '>Baz</index-see-also></indexterm>");
+        final List<IndexEntry> indexEntries = processor.processIndexDitaNode(node, "");
+        assertEquals(1, indexEntries.size());
+
+        final IndexEntry entry = indexEntries.get(0);
+        assertEquals(1, entry.getChildIndexEntries().size());
+        assertEquals(0, entry.getSeeChildIndexEntries().size());
+        assertEquals(0, entry.getSeeAlsoChildIndexEntries().size());
+        assertEquals("Foo", entry.getValue());
+        assertEquals(null, entry.getSortString());
+        assertEquals("Foo", entry.getFormattedString());
+        assertEquals(Collections.singleton("Foo:"), entry.getRefIDs());
+    }
+
+    @Test
+    public void processIndexDitaNode_start() {
+        final Node node = getNode("<indexterm class='- topic/indexterm ' start='foo'>Foo</indexterm>");
+        final List<IndexEntry> indexEntries = processor.processIndexDitaNode(node, "");
+        assertEquals(1, indexEntries.size());
+
+        final IndexEntry entry = indexEntries.get(0);
+        assertEquals(0, entry.getChildIndexEntries().size());
+        assertEquals("Foo", entry.getValue());
+        assertTrue(entry.isStartingRange());
+        assertFalse(entry.isEndingRange());
+        assertEquals(null, entry.getSortString());
+        assertEquals("Foo", entry.getFormattedString());
+        assertEquals(Collections.singleton("foo"), entry.getRefIDs());
+    }
+
+    @Test
+    public void processIndexDitaNode_end() {
+        final Node node = getNode("<indexterm class='- topic/indexterm ' end='foo'>Foo</indexterm>");
+        final List<IndexEntry> indexEntries = processor.processIndexDitaNode(node, "");
+        assertEquals(1, indexEntries.size());
+
+        final IndexEntry entry = indexEntries.get(0);
+        assertEquals(0, entry.getChildIndexEntries().size());
+        assertEquals("Foo", entry.getValue());
+        assertFalse(entry.isStartingRange());
+        assertTrue(entry.isEndingRange());
+        assertEquals(null, entry.getSortString());
+        assertEquals("Foo", entry.getFormattedString());
+        assertEquals(Collections.singleton("foo"), entry.getRefIDs());
     }
 
     private Node getNode(String s) {
