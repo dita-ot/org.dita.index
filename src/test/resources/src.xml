@@ -1,0 +1,15 @@
+<root>
+  <indexterm class="- topic/indexterm ">  </indexterm>
+  <indexterm class="- topic/indexterm ">Foo</indexterm>
+  <indexterm class="- topic/indexterm ">Foo
+    <indexterm class="- topic/indexterm ">Bar</indexterm>
+  </indexterm>
+  <indexterm class="- topic/indexterm ">Foo
+    <keyword class="- topic/keyword ">Bar</keyword>
+  </indexterm>
+  <indexterm class="- topic/indexterm " start="range">Foo</indexterm>
+  <indexterm class="- topic/indexterm " end="range">Foo</indexterm>
+  <indexterm class="- topic/indexterm ">Foo<index-sort-as class='+ topic/index-base indexing-d/index-sort-as '>foo</index-sort-as></indexterm>
+  <indexterm class="- topic/indexterm ">Foo<index-see class='+ topic/index-base indexing-d/index-see '>Baz</index-see></indexterm>
+  <indexterm class="- topic/indexterm ">Foo<index-see-also class='+ topic/index-base indexing-d/index-see-also '>Baz</index-see-also></indexterm>
+</root>

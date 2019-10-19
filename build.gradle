@@ -12,6 +12,9 @@ group = 'org.dita-ot.index'
 version = '1.0.0'
 description = """DITA Open Toolkit indexing plug-in."""
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 repositories {
     mavenCentral()
     jcenter()
@@ -19,6 +22,8 @@ repositories {
 dependencies {
     compile group: "org.dita-ot", name: "dost", version: "[2.1,)"
     testCompile "junit:junit:4.12"
+    testCompile group: 'org.xmlunit', name: 'xmlunit-core', version: '2.6.3'
+    testCompile group: 'org.xmlunit', name: 'xmlunit-matchers', version: '2.6.3'
 }
 
 sourceSets {

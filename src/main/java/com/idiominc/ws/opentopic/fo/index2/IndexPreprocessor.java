@@ -50,8 +50,8 @@ public final class IndexPreprocessor {
      * Index term level separator.
      */
     public static final String VALUE_SEPARATOR = ":";
-    private static final String EL_INDEX_RANGE_START_NAME = "start";
-    private static final String EL_INDEX_RANGE_END_NAME = "end";
+    private static final String ATTR_START = "start";
+    private static final String ATTR_END = "end";
     private static final String HASH_PREFIX = "indexid";
 
     private final String prefix;
@@ -89,22 +89,22 @@ public final class IndexPreprocessor {
      * @param input input document
      * @return read index terms
      */
-    public IndexPreprocessResult process(final Document input) {
+    IndexPreprocessResult process(final Document input) {
         final DocumentBuilder documentBuilder = XMLUtils.getDocumentBuilder();
         final Document doc = documentBuilder.newDocument();
         final Node rootElement = input.getDocumentElement();
         final List<IndexEntry> indexes = new ArrayList<>();
         final Node node = processCurrNode(rootElement, doc, indexes::add).get(0);
         doc.appendChild(node);
-        doc.getDocumentElement().setAttribute(XMLNS_ATTRIBUTE + ":" + this.prefix, this.namespaceUrl);
+        doc.getDocumentElement().setAttribute(XMLNS_ATTRIBUTE + ":" + prefix, namespaceUrl);
         return new IndexPreprocessResult(doc, indexes);
     }
 
     /**
      * Append index groups to the end of document
      */
-    public void createAndAddIndexGroups(final Collection<IndexEntry> indexEntries, final IndexConfiguration configuration,
-                                        final Document document, final Locale locale) {
+    void createAndAddIndexGroups(final Collection<IndexEntry> indexEntries, final IndexConfiguration configuration,
+                                 final Document document, final Locale locale) {
         final IndexComparator indexEntryComparator = new IndexComparator(locale);
         final List<IndexGroup> indexGroups = indexGroupProcessor.process(indexEntries, configuration, locale);
         final Element rootElement = document.getDocumentElement();
@@ -187,8 +187,8 @@ public final class IndexPreprocessor {
             textNode = null;
         }
 
-        if (node.getAttributes().getNamedItem(EL_INDEX_RANGE_START_NAME) != null ||
-                node.getAttributes().getNamedItem(EL_INDEX_RANGE_END_NAME) != null) {
+        if (node.getAttributes().getNamedItem(ATTR_START) != null ||
+                node.getAttributes().getNamedItem(ATTR_END) != null) {
             ditastyle = true;
         }
 
