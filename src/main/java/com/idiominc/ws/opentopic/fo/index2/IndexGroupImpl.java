@@ -40,21 +40,21 @@ class IndexGroupImpl implements IndexGroup {
     }
 
     @Override
-    public void addEntry(final IndexEntry theEntry) {
+    public void addEntry(final IndexEntry entry) {
         boolean isInserted = false;
         if (!childList.isEmpty()) {
             //                MyIndexGroup[] childGroupList = (MyIndexGroup[]) childList.toArray(new MyIndexGroup[childList.size()]);
             for (int i = 0; i < childList.size() && !isInserted; i++) {
                 final IndexGroupImpl thisChild = childList.get(i);
                 final List<String> thisGroupMembers = thisChild.getConfigEntry().getGroupMembers();
-                if (doesStart(theEntry.getValue(), thisGroupMembers)) {
-                    thisChild.addEntry(theEntry);
+                if (doesStart(entry.getValue(), thisGroupMembers)) {
+                    thisChild.addEntry(entry);
                     isInserted = true;
                 }
             }
         }
         if (!isInserted) {
-            this.entries.add(theEntry);
+            entries.add(entry);
         }
     }
     
@@ -78,9 +78,9 @@ class IndexGroupImpl implements IndexGroup {
         return false;
     }
 
-    void addChild(final IndexGroupImpl theIndexGroup) {
-        if (!this.childList.contains(theIndexGroup)) {
-            this.childList.add(theIndexGroup);
+    void addChild(final IndexGroupImpl group) {
+        if (!childList.contains(group)) {
+            childList.add(group);
         }
         //            MyIndexGroup[] childGroupList = (MyIndexGroup[]) childList.toArray(new MyIndexGroup[childList.size()]);
         for (int i = 0; i < childList.size(); i++) {
@@ -100,8 +100,8 @@ class IndexGroupImpl implements IndexGroup {
     }
 
     @Deprecated
-    public void removeChild(final IndexGroupImpl theIndexGroup) {
-        this.childList.remove(theIndexGroup);
+    public void removeChild(final IndexGroupImpl indexGroup) {
+        childList.remove(indexGroup);
     }
 
 }

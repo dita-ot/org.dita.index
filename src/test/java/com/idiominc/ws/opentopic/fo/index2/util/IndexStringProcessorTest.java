@@ -20,17 +20,9 @@ import static org.junit.Assert.assertEquals;
 
 public class IndexStringProcessorTest {
 
-    private IndexStringProcessor processor;
-
-    @Before
-    public void setUp() {
-        processor = new IndexStringProcessor() {
-        };
-    }
-
     @Test
     public void processIndexString() {
-        final List<IndexEntry> acts = processor.processIndexString(
+        final List<IndexEntry> acts = IndexStringProcessor.processIndexString(
                 "Foo<$nopage><$singlepage><$startrange><$endrange>[foo]",
                 emptyList());
         assertEquals(1, acts.size());
@@ -50,10 +42,10 @@ public class IndexStringProcessorTest {
 
     @Test
     public void normalizeTextValue() {
-        assertEquals("foo", processor.normalizeTextValue("foo"));
-        assertEquals("foo bar", processor.normalizeTextValue("  foo \n bar  "));
-        assertEquals("foo\0A0bar", processor.normalizeTextValue("foo\0A0bar"));
-        assertEquals(null, processor.normalizeTextValue(null));
-        assertEquals("", processor.normalizeTextValue(""));
+        assertEquals("foo", IndexStringProcessor.normalizeTextValue("foo"));
+        assertEquals("foo bar", IndexStringProcessor.normalizeTextValue("  foo \n bar  "));
+        assertEquals("foo\0A0bar", IndexStringProcessor.normalizeTextValue("foo\0A0bar"));
+        assertEquals(null, IndexStringProcessor.normalizeTextValue(null));
+        assertEquals("", IndexStringProcessor.normalizeTextValue(""));
     }
 }

@@ -41,6 +41,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class IndexConfiguration {
+
+    static final String ELEM_INDEX_CONFIGURATION_SET = "index.configuration.set";
+    static final String ELEM_INDEX_CONFIGURATION = "index.configuration";
+    static final String INDEX_GROUPS = "index.groups";
+    static final String ELEM_INDEX_GROUP = "index.group";
+    static final String ELEM_GROUP_KEY = "group.key";
+    static final String GROUP_LABEL = "group.label";
+    static final String ELEM_GROUP_MEMBERS = "group.members";
+    static final String ELEM_CHAR_SET = "char.set";
+    static final String ATTR_START_RANGE = "start-range";
+    static final String ATTR_END_RANGE = "end-range";
+
     private final List<ConfigEntry> entries = new ArrayList<>();
 
     private IndexConfiguration() {
@@ -59,7 +71,7 @@ public class IndexConfiguration {
 
         final IndexConfiguration indexConfiguration = new IndexConfiguration();
 
-        final NodeList indexConfigurationSet = document.getElementsByTagName("index.configuration.set");
+        final NodeList indexConfigurationSet = document.getElementsByTagName(ELEM_INDEX_CONFIGURATION_SET);
         if (indexConfigurationSet.getLength() != 1) {
             throw new ParseException(message);
         }
@@ -68,22 +80,22 @@ public class IndexConfiguration {
             throw new ParseException(message);
         }
 
-        final Node indexConf = getFirstNodeByName("index.configuration", indexConfigurationSetNode.getChildNodes());
+        final Node indexConf = getFirstNodeByName(ELEM_INDEX_CONFIGURATION, indexConfigurationSetNode.getChildNodes());
         if (indexConf == null) {
             throw new ParseException(message);
         }
 
-        final Node indexGroups = getFirstNodeByName("index.groups", indexConf.getChildNodes());
+        final Node indexGroups = getFirstNodeByName(INDEX_GROUPS, indexConf.getChildNodes());
         if (indexGroups == null) {
             throw new ParseException(message);
         }
 
         final List<Node> indexGroupChilds = XMLUtils.toList(indexGroups.getChildNodes());
         for (final Node node : indexGroupChilds) {
-            if (node.getNodeName().equals("index.group")) {
-                final Node key = getFirstNodeByName("group.key", node.getChildNodes());
-                final Node label = getFirstNodeByName("group.label", node.getChildNodes());
-                final Node members = getFirstNodeByName("group.members", node.getChildNodes());
+            if (node.getNodeName().equals(ELEM_INDEX_GROUP)) {
+                final Node key = getFirstNodeByName(ELEM_GROUP_KEY, node.getChildNodes());
+                final Node label = getFirstNodeByName(GROUP_LABEL, node.getChildNodes());
+                final Node members = getFirstNodeByName(ELEM_GROUP_MEMBERS, node.getChildNodes());
 
                 final String keyValue = getNodeValue(key);
                 final String labelValue = getNodeValue(label);
@@ -96,10 +108,10 @@ public class IndexConfiguration {
                     final NodeList membersChilds = members.getChildNodes();
                     for (int j = 0; j < membersChilds.getLength(); j++) {
                         final Node membersChild = membersChilds.item(j);
-                        if (membersChild.getNodeName().equals("char.set")) {
+                        if (membersChild.getNodeName().equals(ELEM_CHAR_SET)) {
                             if (membersChild.hasAttributes() && membersChild.getAttributes() != null) {
-                                final Node startRange = membersChild.getAttributes().getNamedItem("start-range");
-                                final Node endRange = membersChild.getAttributes().getNamedItem("end-range");
+                                final Node startRange = membersChild.getAttributes().getNamedItem(ATTR_START_RANGE);
+                                final Node endRange = membersChild.getAttributes().getNamedItem(ATTR_END_RANGE);
                                 final String startRangeText = getNodeValue(startRange);
                                 final String endRangeText = getNodeValue(endRange);
                                 if (startRange != null && startRangeText.length() > 0 &&

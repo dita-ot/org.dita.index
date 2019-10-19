@@ -33,18 +33,8 @@ package com.idiominc.ws.opentopic.fo.index2.configuration;
 
 public class ParseException extends Exception {
 
-    public ParseException() {
-    }
-
     public ParseException(final String message) {
         super(message);
     }
 
-    public ParseException(final Throwable cause) {
-        super(cause);
-    }
-
-    public ParseException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
 }

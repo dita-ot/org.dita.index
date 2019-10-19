@@ -34,19 +34,21 @@ package com.idiominc.ws.opentopic.fo.index2.util;
 import com.idiominc.ws.opentopic.fo.index2.IndexEntry;
 import org.w3c.dom.Node;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import static com.idiominc.ws.opentopic.fo.index2.IndexPreprocessor.VALUE_SEPARATOR;
 
-public abstract class IndexStringProcessor {
+public class IndexStringProcessor {
+
+    private IndexStringProcessor() {
+    }
 
     /**
      * Parse the index marker string and create IndexEntry object from one.
      *
      * @param indexMarkerString index marker string
-     * @param contents             IndexPreprocessorTask instance
+     * @param contents          IndexPreprocessorTask instance
      * @return IndexEntry objects created from the index string
      */
     public static List<IndexEntry> processIndexString(final String indexMarkerString, final List<Node> contents) {
@@ -59,24 +61,24 @@ public abstract class IndexStringProcessor {
     /**
      * Method equals to the normalize-space xslt function
      *
-     * @param theString string to normalize
+     * @param string string to normalize
      * @return normalized string
      */
-    public static String normalizeTextValue(final String theString) {
-        if (null != theString && theString.length() > 0) {
-            return theString.replaceAll("[\\s\\n]+", " ").trim();
+    public static String normalizeTextValue(final String string) {
+        if (null != string && string.length() > 0) {
+            return string.replaceAll("[\\s\\n]+", " ").trim();
         }
-        return theString;
+        return string;
     }
 
-    private static IndexEntry createIndexEntry(final String theValue, final List<Node> contents,
-                                               final String theSortString, final boolean theIsParentNoPage) {
-        final IndexEntry indexEntry = new IndexEntryImpl(theValue, theSortString, theValue, contents);
-        indexEntry.setSuppressesThePageNumber(theIsParentNoPage);
+    private static IndexEntry createIndexEntry(final String value, final List<Node> contents,
+                                               final String sortString, final boolean isParentNoPage) {
+        final IndexEntry indexEntry = new IndexEntryImpl(value, sortString, value, contents);
+        indexEntry.setSuppressesThePageNumber(isParentNoPage);
         indexEntry.setRestoresPageNumber(false);
         indexEntry.setStartRange(false);
         indexEntry.setEndsRange(false);
-        indexEntry.setSortString(theSortString);
+        indexEntry.setSortString(sortString);
         return indexEntry;
     }
 

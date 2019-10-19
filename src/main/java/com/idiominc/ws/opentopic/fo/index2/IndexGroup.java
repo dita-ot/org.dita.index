@@ -34,7 +34,7 @@ package com.idiominc.ws.opentopic.fo.index2;
 import java.util.Collection;
 
 /**
- * Represents index group.
+ * Mutable index group.
  */
 public interface IndexGroup {
 
