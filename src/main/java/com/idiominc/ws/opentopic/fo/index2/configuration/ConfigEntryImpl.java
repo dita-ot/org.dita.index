@@ -31,12 +31,14 @@ See the accompanying LICENSE file for applicable license.
 
 package com.idiominc.ws.opentopic.fo.index2.configuration;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.idiominc.ws.opentopic.fo.index2.IndexCollator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class ConfigEntryImpl implements ConfigEntry {
+@VisibleForTesting
+public class ConfigEntryImpl implements ConfigEntry {
     private final String label;
     private final String key;
     private final List<String> members;

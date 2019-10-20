@@ -20,8 +20,8 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile group: "org.dita-ot", name: "dost", version: "[2.1,)"
-    testCompile "junit:junit:4.12"
+    compile group: 'org.dita-ot', name: 'dost', version: '[2.1,)'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.xmlunit', name: 'xmlunit-core', version: '2.6.3'
     testCompile group: 'org.xmlunit', name: 'xmlunit-matchers', version: '2.6.3'
 }
@@ -31,7 +31,6 @@ sourceSets {
         resources {
             exclude 'build.xml'
             exclude 'catalog_template.xml'
-            exclude 'i18n/*'
             exclude 'messages.xml'
             exclude 'plugin.xml'
             exclude 'xsl/*'
@@ -42,33 +41,14 @@ sourceSets {
 jar.setArchiveName "${project.name}.jar"
 
 task copyInstall(type: Copy) {
-    from (configurations.runtime.allArtifacts.files)
+    from(configurations.runtime.allArtifacts.files)
     destinationDir = file("lib")
 }
-
-//task copyDistTemp(type: Copy) {
-//    from (configurations.runtime.allArtifacts.files) {
-//        into "plugins/org.dita.index/lib"
-//    }
-//    destinationDir = file("${rootProject.buildDir}/tmp/dist")
-//}
 
 task dist(type: Zip) {
     from(configurations.runtime.allArtifacts.files) {
         into "lib"
     }
-//    from(configurations.runtime) {
-//        include { details -> details.file.name.contains('flexmark') }
-//        exclude { details -> details.file.name.contains('flexmark-all') }
-//        exclude { details -> details.file.name.contains('flexmark-ext-emoji') }
-//        exclude { details -> details.file.name.contains('flexmark-ext-gfm-issues') }
-//        exclude { details -> details.file.name.contains('flexmark-ext-gfm-users') }
-//        exclude { details -> details.file.name.contains('flexmark-ext-xwiki-macros') }
-//        exclude { details -> details.file.name.contains('flexmark-pdf') }
-//        include { details -> details.file.name.contains('autolink') }
-//        include { details -> details.file.name.contains('htmlparser') }
-//        into "lib"
-//    }
     from("src/main/resources") {
         include "plugin.xml"
         expand(
@@ -81,7 +61,6 @@ task dist(type: Zip) {
         include "catalog_template.xml"
         include "messages.xml"
         include "xsl/*.xsl"
-//        rename '(.*)', 'xsl/$1'
     }
     from(".") {
         include "LICENSE"

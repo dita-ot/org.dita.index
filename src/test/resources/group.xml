@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:prefix="namespace">
+  <prefix:index.entry value="Foo">
+    <prefix:formatted-value>Foo</prefix:formatted-value>
+    <prefix:refID indexid="indexid2195540" value="Foo:"/>
+    <prefix:see-childs/>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.entry value="Foo">
+    <prefix:formatted-value>Foo
+    </prefix:formatted-value>
+    <prefix:refID indexid="indexid2195540" value="Foo:"/>
+    <prefix:index.entry value="Bar">
+      <prefix:formatted-value>Bar</prefix:formatted-value>
+      <prefix:refID indexid="indexid404795643" value="Foo:Bar:"/>
+      <prefix:see-childs/>
+      <prefix:see-also-childs/>
+    </prefix:index.entry>
+    <prefix:see-childs/>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.entry value="Foo Bar">
+    <prefix:formatted-value>Foo
+      <keyword class="- topic/keyword ">Bar</keyword>
+    </prefix:formatted-value>
+    <prefix:refID indexid="indexid380784097" value="Foo Bar:"/>
+    <prefix:see-childs/>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.entry start-range="true" value="Foo">
+    <prefix:formatted-value>Foo</prefix:formatted-value>
+    <prefix:refID indexid="indexid108280125" value="range"/>
+    <prefix:see-childs/>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.entry end-range="true" value="Foo">
+    <prefix:formatted-value>Foo</prefix:formatted-value>
+    <prefix:refID indexid="indexid108280125" value="range"/>
+    <prefix:see-childs/>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.entry sort-string="foo" value="Foo">
+    <prefix:formatted-value>Foo</prefix:formatted-value>
+    <prefix:refID indexid="indexid2195540" value="Foo:"/>
+    <prefix:see-childs/>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.entry no-page="true" value="Foo">
+    <prefix:formatted-value>Foo</prefix:formatted-value>
+    <prefix:refID indexid="indexid2195540" value="Foo:"/>
+    <prefix:see-childs>
+      <prefix:index.entry value="Baz">
+        <prefix:formatted-value>Baz</prefix:formatted-value>
+        <prefix:refID indexid="indexid2063263" value="Baz:"/>
+        <prefix:see-childs/>
+        <prefix:see-also-childs/>
+      </prefix:index.entry>
+    </prefix:see-childs>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.entry value="Foo">
+    <prefix:formatted-value>Foo</prefix:formatted-value>
+    <prefix:refID indexid="indexid2195540" value="Foo:"/>
+    <prefix:see-childs/>
+    <prefix:see-also-childs>
+      <prefix:index.entry value="Baz">
+        <prefix:formatted-value>Baz</prefix:formatted-value>
+        <prefix:refID indexid="indexid2063263" value="Baz:"/>
+        <prefix:see-childs/>
+        <prefix:see-also-childs/>
+      </prefix:index.entry>
+    </prefix:see-also-childs>
+  </prefix:index.entry>
+  <prefix:index.groups>
+    <prefix:index.group>
+      <prefix:label>F</prefix:label>
+      <prefix:index.entry start-range="true" value="Foo">
+        <prefix:formatted-value>Foo</prefix:formatted-value>
+        <prefix:refID indexid="indexid2195540" value="Foo:"/>
+        <prefix:refID indexid="indexid108280125" value="range"/>
+        <prefix:index.entry value="Bar">
+          <prefix:formatted-value>Bar</prefix:formatted-value>
+          <prefix:refID indexid="indexid404795643" value="Foo:Bar:"/>
+          <prefix:see-childs/>
+          <prefix:see-also-childs/>
+        </prefix:index.entry>
+        <prefix:see-childs>
+          <prefix:index.entry value="Baz">
+            <prefix:formatted-value>Baz</prefix:formatted-value>
+            <prefix:refID indexid="indexid2063263" value="Baz:"/>
+            <prefix:see-childs/>
+            <prefix:see-also-childs/>
+          </prefix:index.entry>
+        </prefix:see-childs>
+        <prefix:see-also-childs>
+          <prefix:index.entry value="Baz">
+            <prefix:formatted-value>Baz</prefix:formatted-value>
+            <prefix:refID indexid="indexid2063263" value="Baz:"/>
+            <prefix:see-childs/>
+            <prefix:see-also-childs/>
+          </prefix:index.entry>
+        </prefix:see-also-childs>
+      </prefix:index.entry>
+      <prefix:index.entry value="Foo Bar">
+        <prefix:formatted-value>Foo
+          <keyword class="- topic/keyword ">Bar</keyword>
+        </prefix:formatted-value>
+        <prefix:refID indexid="indexid380784097" value="Foo Bar:"/>
+        <prefix:see-childs/>
+        <prefix:see-also-childs/>
+      </prefix:index.entry>
+    </prefix:index.group>
+  </prefix:index.groups>
+</root>

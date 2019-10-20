@@ -102,8 +102,9 @@ public final class IndexGroupProcessor {
             final List<String> groupMembers = configEntry.getGroupMembers();
 
             if (!groupMembers.isEmpty()) {
+                final ArrayList<String> keys = new ArrayList<>(indexMap.keySet());
                 //Find entries by comaping first letter with a chars in current config entry
-                for (final String key : indexMap.keySet()) {
+                for (final String key : keys) {
                     if (!key.isEmpty()) {
                         final String value = getValue(indexMap.get(key));
                         //                        final char c = value.charAt(0);

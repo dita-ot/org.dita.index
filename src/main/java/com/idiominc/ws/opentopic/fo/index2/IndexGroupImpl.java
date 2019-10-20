@@ -8,6 +8,7 @@
 
 package com.idiominc.ws.opentopic.fo.index2;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.idiominc.ws.opentopic.fo.index2.configuration.ConfigEntry;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 class IndexGroupImpl implements IndexGroup {
+
     private final String label;
     private final ConfigEntry configEntry;
     private final List<IndexEntry> entries = new ArrayList<>();
@@ -27,7 +29,7 @@ class IndexGroupImpl implements IndexGroup {
 
     @Override
     public String getLabel() {
-        return this.label;
+        return label;
     }
 
     @Override
@@ -36,14 +38,13 @@ class IndexGroupImpl implements IndexGroup {
     }
 
     ConfigEntry getConfigEntry() {
-        return this.configEntry;
+        return configEntry;
     }
 
     @Override
     public void addEntry(final IndexEntry entry) {
         boolean isInserted = false;
         if (!childList.isEmpty()) {
-            //                MyIndexGroup[] childGroupList = (MyIndexGroup[]) childList.toArray(new MyIndexGroup[childList.size()]);
             for (int i = 0; i < childList.size() && !isInserted; i++) {
                 final IndexGroupImpl thisChild = childList.get(i);
                 final List<String> thisGroupMembers = thisChild.getConfigEntry().getGroupMembers();
@@ -58,7 +59,7 @@ class IndexGroupImpl implements IndexGroup {
         }
     }
     
-    public boolean doesStart(final String sourceString, final List<String> compStrings) {
+    private boolean doesStart(final String sourceString, final List<String> compStrings) {
         for (final String compString : compStrings) {
             if (sourceString.startsWith(compString)) {
                 return true;
@@ -78,11 +79,12 @@ class IndexGroupImpl implements IndexGroup {
         return false;
     }
 
+    // FIXME: What is this used for, because this class doesn't expose childList in any way
     void addChild(final IndexGroupImpl group) {
+        // FIXME: this only guards against adding the same instance
         if (!childList.contains(group)) {
             childList.add(group);
         }
-        //            MyIndexGroup[] childGroupList = (MyIndexGroup[]) childList.toArray(new MyIndexGroup[childList.size()]);
         for (int i = 0; i < childList.size(); i++) {
             final IndexGroupImpl thisChild = childList.get(i);
             for (int j = 0; j < childList.size(); j++) {
@@ -91,7 +93,7 @@ class IndexGroupImpl implements IndexGroup {
                     final List<String> thisGroupMembers = thisChild.getConfigEntry().getGroupMembers();
                     final List<String> compGroupMembers = compChild.getConfigEntry().getGroupMembers();
                     if (doesStart(thisGroupMembers, compGroupMembers)) {
-                        this.childList.remove(thisChild);
+                        childList.remove(thisChild);
                         compChild.addChild(thisChild);
                     }
                 }
