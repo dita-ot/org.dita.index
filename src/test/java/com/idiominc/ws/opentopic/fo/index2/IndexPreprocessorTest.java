@@ -115,4 +115,33 @@ public class IndexPreprocessorTest {
             );
         }
     }
+
+    @Test
+    public void createAndAddIndexGroups_Hungarian() throws IOException, SAXException, ParseException, TransformerException {
+        try (InputStream cnf = getClass().getResourceAsStream("/index/hu.xml");
+             InputStream src = getClass().getResourceAsStream("/hu_src.xml");
+             InputStream exp = getClass().getResourceAsStream("/hu_exp.xml")) {
+            final Document configDocument = builder.parse(cnf);
+            final IndexConfiguration configuration = IndexConfiguration.parse(configDocument);
+            final Document srcDoc = builder.parse(src);
+            final IndexPreprocessResult result = processor.process(srcDoc);
+
+            final Collection<IndexEntry> indexEntries = result.indexEntries;
+            processor.createAndAddIndexGroups(indexEntries, configuration, result.document, Locale.forLanguageTag("hu"));
+
+            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            final ByteArrayOutputStream actString = new ByteArrayOutputStream();
+            transformer.transform(new DOMSource(result.document), new StreamResult(actString));
+            final Document actDoc = builder.parse(new ByteArrayInputStream(actString.toByteArray()));
+            TransformerFactory.newInstance().newTransformer().transform(new DOMSource(actDoc), new StreamResult(System.out));
+
+            final Document expDoc = builder.parse(exp);
+            assertThat(actDoc,
+                    CompareMatcher
+                            .isIdenticalTo(expDoc)
+                            .ignoreElementContentWhitespace()
+                            .normalizeWhitespace()
+            );
+        }
+    }
 }

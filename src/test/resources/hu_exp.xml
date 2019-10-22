@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:prefix="namespace">
+  <prefix:index.entry value="DZ">
+    <prefix:formatted-value>DZ</prefix:formatted-value>
+    <prefix:refID indexid="indexid68196" value="DZ:"/>
+    <prefix:see-childs/>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.entry value="DZS">
+    <prefix:formatted-value>DZS</prefix:formatted-value>
+    <prefix:refID indexid="indexid2114909" value="DZS:"/>
+    <prefix:see-childs/>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.entry value="DZS">
+    <prefix:formatted-value>DZS</prefix:formatted-value>
+    <prefix:refID indexid="indexid2114909" value="DZS:"/>
+    <prefix:see-childs/>
+    <prefix:see-also-childs/>
+  </prefix:index.entry>
+  <prefix:index.groups>
+    <prefix:index.group>
+      <prefix:label>DZ</prefix:label>
+      <prefix:index.entry value="DZ">
+        <prefix:formatted-value>DZ</prefix:formatted-value>
+        <prefix:refID indexid="indexid68196" value="DZ:"/>
+        <prefix:see-childs/>
+        <prefix:see-also-childs/>
+      </prefix:index.entry>
+    </prefix:index.group>
+    <prefix:index.group>
+      <prefix:label>DZS</prefix:label>
+      <prefix:index.entry value="DZS">
+        <prefix:formatted-value>DZS</prefix:formatted-value>
+        <prefix:refID indexid="indexid2114909" value="DZS:"/>
+        <prefix:see-childs/>
+        <prefix:see-also-childs/>
+      </prefix:index.entry>
+    </prefix:index.group>
+  </prefix:index.groups>
+</root>
