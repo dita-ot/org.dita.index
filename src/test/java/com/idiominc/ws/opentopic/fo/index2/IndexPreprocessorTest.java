@@ -133,7 +133,6 @@ public class IndexPreprocessorTest {
             final ByteArrayOutputStream actString = new ByteArrayOutputStream();
             transformer.transform(new DOMSource(result.document), new StreamResult(actString));
             final Document actDoc = builder.parse(new ByteArrayInputStream(actString.toByteArray()));
-            TransformerFactory.newInstance().newTransformer().transform(new DOMSource(actDoc), new StreamResult(System.out));
 
             final Document expDoc = builder.parse(exp);
             assertThat(actDoc,
