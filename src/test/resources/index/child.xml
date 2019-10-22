@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index.configuration.set>
+  <index.configuration>
+    <language>en</language>
+    <index.groups>
+      <index.group>
+        <group.key>A</group.key>
+        <group.label>A</group.label>
+        <group.members>
+          <char.set>Foo</char.set>
+        </group.members>
+      </index.group>
+      <index.group>
+        <group.key>A'</group.key>
+        <group.label>A'</group.label>
+        <group.members>
+          <char.set>Fo</char.set>
+          <char.set>Bar</char.set>
+        </group.members>
+      </index.group>
+    </index.groups>
+  </index.configuration>
+</index.configuration.set>

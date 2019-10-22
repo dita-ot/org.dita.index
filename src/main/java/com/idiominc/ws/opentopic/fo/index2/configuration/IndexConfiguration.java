@@ -44,10 +44,10 @@ public class IndexConfiguration {
 
     static final String ELEM_INDEX_CONFIGURATION_SET = "index.configuration.set";
     static final String ELEM_INDEX_CONFIGURATION = "index.configuration";
-    static final String INDEX_GROUPS = "index.groups";
+    static final String ELEM_INDEX_GROUPS = "index.groups";
     static final String ELEM_INDEX_GROUP = "index.group";
     static final String ELEM_GROUP_KEY = "group.key";
-    static final String GROUP_LABEL = "group.label";
+    static final String ELEM_GROUP_LABEL = "group.label";
     static final String ELEM_GROUP_MEMBERS = "group.members";
     static final String ELEM_CHAR_SET = "char.set";
     static final String ATTR_START_RANGE = "start-range";
@@ -85,7 +85,7 @@ public class IndexConfiguration {
             throw new ParseException(message);
         }
 
-        final Node indexGroups = getFirstNodeByName(INDEX_GROUPS, indexConf.getChildNodes());
+        final Node indexGroups = getFirstNodeByName(ELEM_INDEX_GROUPS, indexConf.getChildNodes());
         if (indexGroups == null) {
             throw new ParseException(message);
         }
@@ -94,7 +94,7 @@ public class IndexConfiguration {
         for (final Node node : indexGroupChilds) {
             if (node.getNodeName().equals(ELEM_INDEX_GROUP)) {
                 final Node key = getFirstNodeByName(ELEM_GROUP_KEY, node.getChildNodes());
-                final Node label = getFirstNodeByName(GROUP_LABEL, node.getChildNodes());
+                final Node label = getFirstNodeByName(ELEM_GROUP_LABEL, node.getChildNodes());
                 final Node members = getFirstNodeByName(ELEM_GROUP_MEMBERS, node.getChildNodes());
 
                 final String keyValue = getNodeValue(key);
