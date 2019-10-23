@@ -60,7 +60,7 @@ task dist(type: Zip) {
         include "build.xml"
         include "catalog_template.xml"
         include "messages.xml"
-        include "xsl/*.xsl"
+//        include "xsl/*.xsl"
     }
     from(".") {
         include "LICENSE"
