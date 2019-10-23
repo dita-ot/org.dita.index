@@ -38,12 +38,12 @@ public class IndexCollator {
 
     private Comparator collator;
 
-    public IndexCollator(final Locale theLocale) {
+    public IndexCollator(final Locale locale) {
         try {
-            collator = com.ibm.icu.text.Collator.getInstance(theLocale);
+            collator = com.ibm.icu.text.Collator.getInstance(locale);
         } catch (final NoClassDefFoundError ex) {
             System.out.println("[INFO] IBM ICU4J Collator is not found. Default Java Collator will be used");
-            collator = java.text.Collator.getInstance(theLocale);
+            collator = java.text.Collator.getInstance(locale);
         }
     }
 

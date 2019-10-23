@@ -124,8 +124,8 @@ public class IndexEntryImpl implements IndexEntry {
     }
 
     @Override
-    public void addRefID(final String theID) {
-        refIDs.add(theID);
+    public void addRefID(final String id) {
+        refIDs.add(id);
     }
 
     @Override

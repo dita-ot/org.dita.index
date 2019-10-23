@@ -44,10 +44,10 @@ public class ConfigEntryImpl implements ConfigEntry {
     private final List<String> members;
     private final List<CharRange> ranges = new ArrayList<>();
 
-    public ConfigEntryImpl(final String theLabel, final String theKey, final List<String> theMembers) {
-        this.label = theLabel;
-        this.key = theKey;
-        this.members = theMembers;
+    public ConfigEntryImpl(final String label, final String key, final List<String> members) {
+        this.label = label;
+        this.key = key;
+        this.members = members;
     }
 
     public void addRange(final CharRange range) {

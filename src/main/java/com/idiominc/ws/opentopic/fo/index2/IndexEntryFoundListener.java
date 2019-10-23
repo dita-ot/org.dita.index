@@ -35,7 +35,7 @@ interface IndexEntryFoundListener {
     /**
      * Notifies that the new index entry was found
      *
-     * @param theEntry index entry
+     * @param entry index entry
      */
-    void foundEntry(IndexEntry theEntry);
+    void foundEntry(IndexEntry entry);
 }

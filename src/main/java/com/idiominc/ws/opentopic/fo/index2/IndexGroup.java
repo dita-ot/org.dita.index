@@ -51,7 +51,7 @@ interface IndexGroup {
     /**
      * Adds entry to the index group
      *
-     * @param theEntry index entry
+     * @param entry index entry
      */
-    void addEntry(IndexEntry theEntry);
+    void addEntry(IndexEntry entry);
 }

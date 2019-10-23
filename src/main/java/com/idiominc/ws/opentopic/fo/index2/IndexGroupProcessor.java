@@ -177,12 +177,12 @@ public final class IndexGroupProcessor {
         return cleanResult;
     }
 
-    private static String getValue(final IndexEntry theEntry) {
-        final String sortValue = theEntry.getSortString();
+    private static String getValue(final IndexEntry entry) {
+        final String sortValue = entry.getSortString();
         if (sortValue != null && sortValue.length() > 0) {
             return sortValue;
         } else {
-            return theEntry.getValue();
+            return entry.getValue();
         }
     }
 
@@ -228,39 +228,39 @@ public final class IndexGroupProcessor {
         return false;
     }
 
-    private static Map<String, IndexEntry> createMap(final Collection<IndexEntry> theIndexEntries) {
+    private static Map<String, IndexEntry> createMap(final Collection<IndexEntry> indexEntries) {
         final Map<String, IndexEntry> map = new HashMap<>();
-        for (final IndexEntry theIndexEntrie : theIndexEntries) {
-            final String value = theIndexEntrie.getValue();
+        for (final IndexEntry indexEntrie : indexEntries) {
+            final String value = indexEntrie.getValue();
 
             if (!map.containsKey(value)) {
-                map.put(value, theIndexEntrie);
+                map.put(value, indexEntrie);
             } else {
                 final IndexEntry existingEntry = map.get(value);
-                final Collection<IndexEntry> childIndexEntries = theIndexEntrie.getChildIndexEntries();
+                final Collection<IndexEntry> childIndexEntries = indexEntrie.getChildIndexEntries();
                 for (final IndexEntry childIndexEntry : childIndexEntries) {
                     existingEntry.addChild(childIndexEntry);
                 }
-                final Collection<IndexEntry> seeChildIndexEntries = theIndexEntrie.getSeeChildIndexEntries();
+                final Collection<IndexEntry> seeChildIndexEntries = indexEntrie.getSeeChildIndexEntries();
                 for (final IndexEntry seeChildIndexEntry : seeChildIndexEntries) {
                     existingEntry.addSeeChild(seeChildIndexEntry);
                 }
-                final Collection<IndexEntry> seeAlsoChildIndexEntries = theIndexEntrie.getSeeAlsoChildIndexEntries();
+                final Collection<IndexEntry> seeAlsoChildIndexEntries = indexEntrie.getSeeAlsoChildIndexEntries();
                 for (final IndexEntry seeAlsoChildIndexEntry : seeAlsoChildIndexEntries) {
                     existingEntry.addSeeAlsoChild(seeAlsoChildIndexEntry);
                 }
                 //supress some attributes of given entry to the existing one
-                if (theIndexEntrie.isRestoresPageNumber()) {
+                if (indexEntrie.isRestoresPageNumber()) {
                     existingEntry.setRestoresPageNumber(true);
                 }
-                final Set<String> refIDs = theIndexEntrie.getRefIDs();
+                final Set<String> refIDs = indexEntrie.getRefIDs();
                 for (final String refID : refIDs) {
                     existingEntry.addRefID(refID);
                 }
-                if (!theIndexEntrie.isSuppressesThePageNumber()) {
+                if (!indexEntrie.isSuppressesThePageNumber()) {
                     existingEntry.setSuppressesThePageNumber(false);
                 }
-                if (theIndexEntrie.isStartingRange()) {
+                if (indexEntrie.isStartingRange()) {
                     existingEntry.setStartRange(true);
                 }
             }

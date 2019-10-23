@@ -104,59 +104,59 @@ public interface IndexEntry {
     /**
      * Adds reference id to the index entry
      *
-     * @param theID reference id
+     * @param id reference id
      */
-    void addRefID(String theID);
+    void addRefID(String id);
 
     /**
      * Adds child to the entry
      *
-     * @param theEntry index entry
+     * @param entry index entry
      */
-    void addChild(IndexEntry theEntry);
+    void addChild(IndexEntry entry);
 
     /**
      * Sets if the index entry restores page number
      * <code>See "Adobe Framemaker 7.1" help, topic "Adding index markers" (page is "1_15_8_0.html") for details</code>
      *
-     * @param theRestoresPageNumber
+     * @param restoresPageNumber
      */
-    void setRestoresPageNumber(boolean theRestoresPageNumber);
+    void setRestoresPageNumber(boolean restoresPageNumber);
 
     /**
      * Sets if the index entry suppresses page number
      * <code>See "Adobe Framemaker 7.1" help, topic "Adding index markers" (page is "1_15_8_0.html") for details</code>
      *
-     * @param theSuppressesThePageNumber
+     * @param suppressesThePageNumber
      */
-    void setSuppressesThePageNumber(boolean theSuppressesThePageNumber);
+    void setSuppressesThePageNumber(boolean suppressesThePageNumber);
 
     /**
      * Sets if the index entry starts range
      * <code>See "Adobe Framemaker 7.1" help, topic "Adding index markers" (page is "1_15_8_0.html") for details</code>
      *
-     * @param theStartRange
+     * @param startRange
      */
-    void setStartRange(boolean theStartRange);
+    void setStartRange(boolean startRange);
 
     /**
      * Sets if the index entry ends range
      * <code>See "Adobe Framemaker 7.1" help, topic "Adding index markers" (page is "1_15_8_0.html") for details</code>
      *
-     * @param theEndsRange
+     * @param endsRange
      */
-    void setEndsRange(boolean theEndsRange);
+    void setEndsRange(boolean endsRange);
 
     /**
      * Sets sort string for the value
      *
-     * @param theSortString
+     * @param sortString
      */
-    void setSortString(String theSortString);
+    void setSortString(String sortString);
 
-    void addSeeChild(IndexEntry theEntry);
+    void addSeeChild(IndexEntry entry);
 
-    void addSeeAlsoChild(IndexEntry theEntry);
+    void addSeeAlsoChild(IndexEntry entry);
 
     List<IndexEntry> getSeeChildIndexEntries();
 

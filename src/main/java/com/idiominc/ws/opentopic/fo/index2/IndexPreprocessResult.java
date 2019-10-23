@@ -39,8 +39,8 @@ public class IndexPreprocessResult {
     public final Document document;
     public final Collection<IndexEntry> indexEntries;
 
-    public IndexPreprocessResult(final Document theDocument, final Collection<IndexEntry> theIndexEntries) {
-        document = theDocument;
-        indexEntries = theIndexEntries;
+    public IndexPreprocessResult(final Document document, final Collection<IndexEntry> indexEntries) {
+        this.document = document;
+        this.indexEntries = indexEntries;
     }
 }

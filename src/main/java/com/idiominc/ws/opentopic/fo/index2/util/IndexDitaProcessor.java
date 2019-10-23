@@ -180,27 +180,26 @@ public final class IndexDitaProcessor {
     }
 
     @VisibleForTesting
-    static String stripFormatting(final String theValue) {
-        final int ltPos = theValue.indexOf(LT);
-        final int gtPos = theValue.indexOf(GT);
+    static String stripFormatting(final String value) {
+        final int ltPos = value.indexOf(LT);
+        final int gtPos = value.indexOf(GT);
         if ((ltPos == -1) && (gtPos == -1)) {
-            return theValue;
+            return value;
         } else if (ltPos == -1 || gtPos == -1 || (ltPos > gtPos)) {
-            System.err.println("Possibly bad formatting in string \"" + theValue + "\"");
-            return theValue;
+            System.err.println("Possibly bad formatting in string \"" + value + "\"");
+            return value;
         }
-        final String value = theValue.substring(0, ltPos) + theValue.substring(gtPos + 1);
-        return stripFormatting(value);
+        return stripFormatting(value.substring(0, ltPos) + value.substring(gtPos + 1));
     }
 
     @VisibleForTesting
-    static String normalizeTextValue(final String theString) {
-        if (null != theString && !theString.isEmpty()) {
-            String res = theString.replaceAll("[\\s\\n]+", " ").trim();
+    static String normalizeTextValue(final String string) {
+        if (null != string && !string.isEmpty()) {
+            String res = string.replaceAll("[\\s\\n]+", " ").trim();
             res = res.replaceAll("[\\s]+$", ""); //replace in the end of string
             return res;
         }
-        return theString;
+        return string;
     }
 
 }
