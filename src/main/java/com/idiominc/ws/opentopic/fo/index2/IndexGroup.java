@@ -36,7 +36,7 @@ import java.util.Collection;
 /**
  * Mutable index group.
  */
-public interface IndexGroup {
+interface IndexGroup {
 
     /**
      * @return group label

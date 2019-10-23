@@ -63,7 +63,7 @@ public class IndexEntryImpl implements IndexEntry {
      * @param value           string value
      * @param sortString      sort-as value
      * @param formattedString formatter string value
-     * @param contents           markup value, may be {@code null}
+     * @param contents        markup value, may be {@code null}
      */
     public IndexEntryImpl(final String value, final String sortString,
                           final String formattedString, final List<Node> contents) {

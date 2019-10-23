@@ -54,18 +54,22 @@ public class ConfigEntryImpl implements ConfigEntry {
         ranges.add(range);
     }
 
+    @Override
     public String getLabel() {
         return this.label;
     }
 
+    @Override
     public String getKey() {
         return this.key;
     }
 
+    @Override
     public List<String> getGroupMembers() {
         return this.members;
     }
 
+    @Override
     public boolean isInRange(final String value, final IndexCollator collator) {
         if (!value.isEmpty()) {
             for (final String member : members) {

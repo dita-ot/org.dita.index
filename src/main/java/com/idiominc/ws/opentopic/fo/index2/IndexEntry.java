@@ -33,7 +33,6 @@ package com.idiominc.ws.opentopic.fo.index2;
 
 import org.w3c.dom.Node;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 

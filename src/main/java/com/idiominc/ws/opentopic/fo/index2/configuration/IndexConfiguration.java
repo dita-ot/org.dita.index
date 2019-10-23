@@ -42,16 +42,16 @@ import java.util.List;
 
 public class IndexConfiguration {
 
-    static final String ELEM_INDEX_CONFIGURATION_SET = "index.configuration.set";
-    static final String ELEM_INDEX_CONFIGURATION = "index.configuration";
-    static final String ELEM_INDEX_GROUPS = "index.groups";
-    static final String ELEM_INDEX_GROUP = "index.group";
-    static final String ELEM_GROUP_KEY = "group.key";
-    static final String ELEM_GROUP_LABEL = "group.label";
-    static final String ELEM_GROUP_MEMBERS = "group.members";
-    static final String ELEM_CHAR_SET = "char.set";
-    static final String ATTR_START_RANGE = "start-range";
-    static final String ATTR_END_RANGE = "end-range";
+    private static final String ELEM_INDEX_CONFIGURATION_SET = "index.configuration.set";
+    private static final String ELEM_INDEX_CONFIGURATION = "index.configuration";
+    private static final String ELEM_INDEX_GROUPS = "index.groups";
+    private static final String ELEM_INDEX_GROUP = "index.group";
+    private static final String ELEM_GROUP_KEY = "group.key";
+    private static final String ELEM_GROUP_LABEL = "group.label";
+    private static final String ELEM_GROUP_MEMBERS = "group.members";
+    private static final String ELEM_CHAR_SET = "char.set";
+    private static final String ATTR_START_RANGE = "start-range";
+    private static final String ATTR_END_RANGE = "end-range";
 
     private final List<ConfigEntry> entries = new ArrayList<>();
 

@@ -8,7 +8,6 @@
 
 package com.idiominc.ws.opentopic.fo.index2;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.idiominc.ws.opentopic.fo.index2.configuration.ConfigEntry;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ class IndexGroupImpl implements IndexGroup {
             entries.add(entry);
         }
     }
-    
+
     private boolean doesStart(final String sourceString, final List<String> compStrings) {
         for (final String compString : compStrings) {
             if (sourceString.startsWith(compString)) {

@@ -74,7 +74,7 @@ public final class IndexPreprocessor {
     private final Deque<Boolean> excludedDraftSection = new ArrayDeque<>();
     private final IndexDitaProcessor indexDitaProcessor;
     private final IndexGroupProcessor indexGroupProcessor;
-    private boolean includeDraft;
+    private final boolean includeDraft;
 
     /**
      * Create new index preprocessor.
@@ -85,7 +85,6 @@ public final class IndexPreprocessor {
     public IndexPreprocessor(final String prefix, final String namespaceUrl, final boolean includeDraft) {
         this.prefix = prefix;
         this.namespaceUrl = namespaceUrl;
-        this.excludedDraftSection.clear();
         this.excludedDraftSection.add(false);
         this.includeDraft = includeDraft;
         indexDitaProcessor = new IndexDitaProcessor();
@@ -273,7 +272,7 @@ public final class IndexPreprocessor {
      */
     private List<Node> transformToNodes(final List<IndexEntry> indexEntries, final Document targetDocument, final Comparator<IndexEntry> indexEntryComparator) {
         if (null != indexEntryComparator) {
-            Collections.sort(indexEntries, indexEntryComparator);
+            indexEntries.sort(indexEntryComparator);
         }
 
         final List<Node> result = new ArrayList<>();
