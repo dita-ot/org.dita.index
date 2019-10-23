@@ -27,17 +27,6 @@ licensing agreement to the extent that such terms and conditions conflict
 with those set forth herein.
 -->
 <index.configuration.set>
-  <metadata>
-    <revision.history>
-      <revision>
-        <date>26 Mar 2004 4:08PM</date>
-        <author>Ivan Luzyanin</author>
-        <description>
-          Created
-        </description>
-      </revision>
-    </revision.history>
-  </metadata>
   <index.configuration>
     <language>zh-CN</language>
     <description></description>
