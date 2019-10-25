@@ -3,20 +3,14 @@
   <prefix:index.entry value="Fo">
     <prefix:formatted-value>Fo</prefix:formatted-value>
     <prefix:refID indexid="indexid70769" value="Fo:"/>
-    <prefix:see-childs/>
-    <prefix:see-also-childs/>
   </prefix:index.entry>
   <prefix:index.entry value="Foo">
     <prefix:formatted-value>Foo</prefix:formatted-value>
     <prefix:refID indexid="indexid2195540" value="Foo:"/>
-    <prefix:see-childs/>
-    <prefix:see-also-childs/>
   </prefix:index.entry>
   <prefix:index.entry value="Bar">
     <prefix:formatted-value>Bar</prefix:formatted-value>
     <prefix:refID indexid="indexid2063015" value="Bar:"/>
-    <prefix:see-childs/>
-    <prefix:see-also-childs/>
   </prefix:index.entry>
   <prefix:index.groups>
     <prefix:index.group>
@@ -24,14 +18,10 @@
       <prefix:index.entry value="Fo">
         <prefix:formatted-value>Fo</prefix:formatted-value>
         <prefix:refID indexid="indexid70769" value="Fo:"/>
-        <prefix:see-childs/>
-        <prefix:see-also-childs/>
       </prefix:index.entry>
       <prefix:index.entry value="Foo">
         <prefix:formatted-value>Foo</prefix:formatted-value>
         <prefix:refID indexid="indexid2195540" value="Foo:"/>
-        <prefix:see-childs/>
-        <prefix:see-also-childs/>
       </prefix:index.entry>
     </prefix:index.group>
     <prefix:index.group>
@@ -39,8 +29,6 @@
       <prefix:index.entry value="Bar">
         <prefix:formatted-value>Bar</prefix:formatted-value>
         <prefix:refID indexid="indexid2063015" value="Bar:"/>
-        <prefix:see-childs/>
-        <prefix:see-also-childs/>
       </prefix:index.entry>
     </prefix:index.group>
   </prefix:index.groups>

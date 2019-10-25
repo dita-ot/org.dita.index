@@ -264,7 +264,7 @@ public class IndexEntryImpl implements IndexEntry {
 
     @Override
     public List<IndexEntry> getSeeAlsoChildIndexEntries() {
-        return seeChilds.isEmpty() ? emptyList() : new ArrayList(seeAlsoChilds.values());
+        return seeAlsoChilds.isEmpty() ? emptyList() : new ArrayList(seeAlsoChilds.values());
     }
 
     @Override
