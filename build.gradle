@@ -38,6 +38,9 @@ sourceSets {
     }
 }
 
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = "UTF-8"
+
 jar.setArchiveName "${project.name}.jar"
 
 task copyInstall(type: Copy) {

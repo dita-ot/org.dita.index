@@ -2,29 +2,12 @@
 <project>
 
   <target name="org.dita.index.init">
-<!--    <xmlcatalog id="org.dita.index.catalog">-->
-<!--      <catalogpath>-->
-<!--        <pathelement location="${dita.plugin.org.dita.index.dir}/catalog.xml"/>-->
-<!--        <pathelement location="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>-->
-<!--      </catalogpath>-->
-<!--    </xmlcatalog>-->
     <taskdef classname="org.dita.index.IndexPreprocessorTask" name="index-preprocess"/>
-
     <condition property="_org.dita.index.skip" value="true">
       <istrue value="${org.dita.index.skip}"/>
     </condition>
   </target>
 
-  <!--
-    Properties:
-    
-      document.locale
-      document.language
-      default.language
-
-      dita.temp.dir
-      inputFile.url
-  -->
   <target name="org.dita.index" depends="org.dita.index.init" unless="_org.dita.index.skip">
     <condition property="index.config.file" value="${dita.plugin.org.dita.index.dir}/index/${document.locale}.xml">
       <available file="${dita.plugin.org.dita.index.dir}/index/${document.locale}.xml"/>
@@ -36,13 +19,11 @@
 
     <echo level="info">Processing ${inputFile} to ${dita.temp.dir}/stage1.xml</echo>
     <index-preprocess
-        input="${inputFile.url}"
+        input="${inputFile}"
         output="${dita.temp.dir}/stage1.xml"
         indexConfig="${index.config.file}"
         locale="${document.locale}"
-        draft="${args.draft}">
-<!--      <xmlcatalog refid="org.dita.index.catalog"/>-->
-    </index-preprocess>
+        draft="${args.draft}"/>
   </target>
 
 </project>
