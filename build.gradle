@@ -30,7 +30,7 @@ sourceSets {
     main {
         resources {
             exclude 'build.xml'
-            exclude 'catalog_template.xml'
+//            exclude 'catalog_template.xml'
             exclude 'messages.xml'
             exclude 'plugin.xml'
 //            exclude 'xsl/*'
@@ -58,7 +58,7 @@ task dist(type: Zip) {
     }
     from("src/main/resources") {
         include "build.xml"
-        include "catalog_template.xml"
+//        include "catalog_template.xml"
         include "messages.xml"
     }
     from(".") {

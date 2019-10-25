@@ -65,7 +65,6 @@ public class IndexPreprocessorTask extends Task {
 
     private File input;
     private File output;
-    private XMLCatalog xmlcatalog;
     private Locale locale;
     private File indexConfig;
     private boolean draft;
@@ -75,7 +74,6 @@ public class IndexPreprocessorTask extends Task {
         checkParameters();
 
         final DocumentBuilder documentBuilder = XMLUtils.getDocumentBuilder();
-        documentBuilder.setEntityResolver(xmlcatalog);
 
         final Document doc;
         try {
@@ -142,10 +140,6 @@ public class IndexPreprocessorTask extends Task {
 
     public void setOutput(final File output) {
         this.output = output;
-    }
-
-    public void addConfiguredXmlcatalog(final XMLCatalog xmlcatalog) {
-        this.xmlcatalog = xmlcatalog;
     }
 
     public void setLocale(final String locale) {
