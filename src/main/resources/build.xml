@@ -8,7 +8,7 @@
 <!--        <pathelement location="${dita.plugin.org.dita.base.dir}/catalog-dita.xml"/>-->
 <!--      </catalogpath>-->
 <!--    </xmlcatalog>-->
-    <taskdef classname="com.idiominc.ws.opentopic.fo.index2.IndexPreprocessorTask" name="index-preprocess"/>
+    <taskdef classname="org.dita.index.IndexPreprocessorTask" name="index-preprocess"/>
 
     <condition property="_org.dita.index.skip" value="true">
       <istrue value="${org.dita.index.skip}"/>
