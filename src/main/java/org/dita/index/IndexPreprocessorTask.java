@@ -31,13 +31,13 @@ See the accompanying LICENSE file for applicable license.
 
 package org.dita.index;
 
-import org.dita.index.configuration.IndexConfiguration;
-import org.dita.index.configuration.ParseException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.dita.dost.log.DITAOTAntLogger;
 import org.dita.dost.util.XMLUtils;
+import org.dita.index.configuration.IndexConfiguration;
+import org.dita.index.configuration.ParseException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 

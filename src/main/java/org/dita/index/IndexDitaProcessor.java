@@ -43,9 +43,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.dita.index.IndexPreprocessor.VALUE_SEPARATOR;
 import static org.dita.dost.util.Constants.*;
 import static org.dita.dost.util.XMLUtils.toList;
+import static org.dita.index.IndexPreprocessor.VALUE_SEPARATOR;
 
 public final class IndexDitaProcessor {
 

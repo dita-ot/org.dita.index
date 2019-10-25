@@ -31,10 +31,10 @@ See the accompanying LICENSE file for applicable license.
 
 package org.dita.index;
 
-import org.dita.index.configuration.ConfigEntry;
-import org.dita.index.configuration.IndexConfiguration;
 import org.dita.dost.log.DITAOTLogger;
 import org.dita.dost.log.MessageUtils;
+import org.dita.index.configuration.ConfigEntry;
+import org.dita.index.configuration.IndexConfiguration;
 
 import java.util.*;
 

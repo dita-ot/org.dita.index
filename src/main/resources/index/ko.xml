@@ -283,9 +283,9 @@ See the accompanying LICENSE file for applicable license.
           <char.set>z</char.set>
         </group.members>
       </index.group>
-<!-- Explanation of following ranges: the first range should be xAC00 to xB097, inclusive.
-           Using character xB097 (낗) as the end range value results in B097 not ending up in a group.
-           To keep end of range for each group, adding it as an additional character. -->
+      <!-- Explanation of following ranges: the first range should be xAC00 to xB097, inclusive.
+                 Using character xB097 (낗) as the end range value results in B097 not ending up in a group.
+                 To keep end of range for each group, adding it as an additional character. -->
       <index.group>
         <group.key>ᄀ</group.key>
         <group.label>가</group.label>

@@ -31,9 +31,9 @@ See the accompanying LICENSE file for applicable license.
 
 package org.dita.index;
 
-import org.dita.index.configuration.IndexConfiguration;
 import org.dita.dost.log.DITAOTLogger;
 import org.dita.dost.util.XMLUtils;
+import org.dita.index.configuration.IndexConfiguration;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
