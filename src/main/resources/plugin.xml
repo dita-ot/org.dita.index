@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin id="org.dita.index" version="${version}">
-  <!-- extension points -->
-  <!--
-  <extension-point id="dita.xsl.xslfo" name="PDF XSLT import"/>
-  <extension-point id="dita.xsl.xslfo.i18n-postprocess" name="PDF I18N postprocess import"/>
-  <extension-point id="org.dita.index.xsl.topicmerge" name="PDF2 topic merge XSLT import"/>
-  <extension-point id="depend.org.dita.index.init.pre" name="Initialization pre-target"/>
-  <extension-point id="depend.org.dita.index.format.pre" name="Formatting pre-target"/>
-  <extension-point id="depend.org.dita.index.format" name="Formatting target"/>
-  <extension-point id="depend.org.dita.index.format.post" name="Formatting post-target"/>
-  <extension-point id="org.dita.index.catalog.relative" name="Configuration XML catalog"/>
-  <extension-point id="dita.conductor.pdf2.param" name="PDF XSLT parameters"/>
-  <extension-point id="dita.conductor.pdf2.formatter.check" name="Formatter check"/>
-  -->
-  <!-- extensions -->
   <feature extension="dita.conductor.lib.import" file="lib/${jar}"/>
   <feature extension="ant.import" file="build.xml"/>
-  <!--
-  <feature extension="dita.xsl.messages" file="resource/messages.xml"/>
-  -->
-  <feature extension="dita.specialization.catalog.relative" file="catalog.xml"/>
-  <template file="catalog_template.xml"/>
-  <!--
-  <template file="xsl/fo/i18n-postprocess_template.xsl"/>
-  <template file="xsl/fo/topic2fo_shell_template.xsl"/>
-  <template file="xsl/common/topicmerge_template.xsl"/>
-  -->
+  <feature extension="depend.org.dita.pdf2.index" value="org.dita.index"/>
+  <transtype abstract="true" extends="pdf">
+    <param name="org.dita.index.skip" desc="Disable index processing." type="enum">
+      <val>yes</val>
+      <val default="true">no</val>
+    </param>
+  </transtype>
 </plugin>
