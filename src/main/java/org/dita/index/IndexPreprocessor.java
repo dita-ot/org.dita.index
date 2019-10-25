@@ -155,11 +155,12 @@ public final class IndexPreprocessor {
         } else {
             final Node result = targetDocument.importNode(node, false);
             if (!includeDraft && checkDraftNode(node)) {
-                excludedDraftSection.add(true);
+                excludedDraftSection.push(true);
             }
             final NodeList childNodes = node.getChildNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {
-                final List<Node> processedNodes = processCurrNode(childNodes.item(i), targetDocument, indexEntryFoundListener);
+                final Node child = childNodes.item(i);
+                final List<Node> processedNodes = processCurrNode(child, targetDocument, indexEntryFoundListener);
                 for (final Node processedNode : processedNodes) {
                     result.appendChild(processedNode);
                 }
@@ -333,7 +334,7 @@ public final class IndexPreprocessor {
             }
 
             final List<IndexEntry> seeChildIndexEntries = indexEntry.getSeeChildIndexEntries();
-            if (seeChildIndexEntries != null) {
+            if (!seeChildIndexEntries.isEmpty()) {
                 final Element seeElement = createElement(targetDocument, ELEM_SEE_CHILDS);
                 final List<Node> seeNodes = transformToNodes(seeChildIndexEntries, targetDocument, indexEntryComparator);
                 for (final Node node : seeNodes) {
@@ -344,7 +345,7 @@ public final class IndexPreprocessor {
             }
 
             final List<IndexEntry> seeAlsoChildIndexEntries = indexEntry.getSeeAlsoChildIndexEntries();
-            if (seeAlsoChildIndexEntries != null) {
+            if (!seeAlsoChildIndexEntries.isEmpty()) {
                 final Element seeAlsoElement = createElement(targetDocument, ELEM_SEE_ALSO_CHILDS);
                 final List<Node> seeAlsoNodes = transformToNodes(seeAlsoChildIndexEntries, targetDocument, indexEntryComparator);
                 for (final Node node : seeAlsoNodes) {

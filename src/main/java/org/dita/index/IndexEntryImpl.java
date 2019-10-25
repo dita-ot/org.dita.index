@@ -35,6 +35,8 @@ import org.w3c.dom.Node;
 
 import java.util.*;
 
+import static java.util.Collections.emptyList;
+
 /**
  * Mutable index entry.
  */
@@ -257,12 +259,12 @@ public class IndexEntryImpl implements IndexEntry {
 
     @Override
     public List<IndexEntry> getSeeChildIndexEntries() {
-        return new ArrayList(seeChilds.values());
+        return seeChilds.isEmpty() ? emptyList() : new ArrayList(seeChilds.values());
     }
 
     @Override
     public List<IndexEntry> getSeeAlsoChildIndexEntries() {
-        return new ArrayList(seeAlsoChilds.values());
+        return seeChilds.isEmpty() ? emptyList() : new ArrayList(seeAlsoChilds.values());
     }
 
     @Override
