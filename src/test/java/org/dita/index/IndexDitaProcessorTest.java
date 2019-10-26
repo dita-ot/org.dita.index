@@ -154,8 +154,8 @@ public class IndexDitaProcessorTest {
 
         final IndexEntry entry = indexEntries.get(0);
         assertEquals(1, entry.getChildIndexEntries().size());
-        assertEquals(0, entry.getSeeChildIndexEntries().size());
-        assertEquals(0, entry.getSeeAlsoChildIndexEntries().size());
+        assertEquals(null, entry.getSeeChildIndexEntries());
+        assertEquals(null, entry.getSeeAlsoChildIndexEntries());
         assertEquals("Foo", entry.getValue());
         assertEquals(null, entry.getSortString());
         assertEquals("Foo", entry.getFormattedString());

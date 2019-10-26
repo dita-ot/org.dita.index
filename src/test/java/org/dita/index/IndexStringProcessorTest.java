@@ -30,8 +30,8 @@ public class IndexStringProcessorTest {
         assertEquals(0, act.getContents().size());
         assertEquals(null, act.getSortString());
         assertEquals(0, act.getChildIndexEntries().size());
-        assertEquals(0, act.getSeeChildIndexEntries().size());
-        assertEquals(0, act.getSeeAlsoChildIndexEntries().size());
+        assertEquals(null, act.getSeeChildIndexEntries());
+        assertEquals(null, act.getSeeAlsoChildIndexEntries());
         assertEquals(false, act.isStartingRange());
         assertEquals(false, act.isEndingRange());
         assertEquals(false, act.isSuppressesThePageNumber());

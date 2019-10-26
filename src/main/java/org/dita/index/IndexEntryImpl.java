@@ -101,7 +101,7 @@ public class IndexEntryImpl implements IndexEntry {
 
     @Override
     public List<IndexEntry> getChildIndexEntries() {
-        return new ArrayList(childs.values());
+        return childs.isEmpty() ? emptyList() : new ArrayList(childs.values());
     }
 
     @Override
@@ -257,14 +257,18 @@ public class IndexEntryImpl implements IndexEntry {
         this.restoresPageNumber = restoresPageNumber;
     }
 
+    // FIXME this should return an empty list of no values, but it will lead to incorrect output
+    //  and we don't have a test for it
     @Override
     public List<IndexEntry> getSeeChildIndexEntries() {
-        return seeChilds.isEmpty() ? emptyList() : new ArrayList(seeChilds.values());
+        return seeChilds.isEmpty() ? null : new ArrayList(seeChilds.values());
     }
 
+    // FIXME this should return an empty list of no values, but it will lead to incorrect output
+    //  and we don't have a test for it
     @Override
     public List<IndexEntry> getSeeAlsoChildIndexEntries() {
-        return seeAlsoChilds.isEmpty() ? emptyList() : new ArrayList(seeAlsoChilds.values());
+        return seeAlsoChilds.isEmpty() ? null : new ArrayList(seeAlsoChilds.values());
     }
 
     @Override

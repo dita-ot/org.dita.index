@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns:prefix="namespace">
-  <prefix:index.entry value="Foo">
-    <prefix:formatted-value>Foo</prefix:formatted-value>
-    <prefix:refID indexid="indexid2195540" value="Foo:"/>
+  <prefix:index.entry value="Baz">
+    <prefix:formatted-value>Baz</prefix:formatted-value>
+    <prefix:refID indexid="indexid2063263" value="Baz:"/>
   </prefix:index.entry>
   <prefix:index.entry value="Foo">
     <prefix:formatted-value>Foo

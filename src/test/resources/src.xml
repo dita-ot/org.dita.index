@@ -1,5 +1,5 @@
 <root>
-  <indexterm class="- topic/indexterm ">Foo</indexterm>
+  <indexterm class="- topic/indexterm ">Baz</indexterm>
   <indexterm class="- topic/indexterm ">Foo
     <indexterm class="- topic/indexterm ">Bar</indexterm>
   </indexterm>

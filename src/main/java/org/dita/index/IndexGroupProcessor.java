@@ -242,12 +242,16 @@ public final class IndexGroupProcessor {
                     existingEntry.addChild(childIndexEntry);
                 }
                 final Collection<IndexEntry> seeChildIndexEntries = indexEntrie.getSeeChildIndexEntries();
-                for (final IndexEntry seeChildIndexEntry : seeChildIndexEntries) {
-                    existingEntry.addSeeChild(seeChildIndexEntry);
+                if (seeChildIndexEntries != null) {
+                    for (final IndexEntry seeChildIndexEntry : seeChildIndexEntries) {
+                        existingEntry.addSeeChild(seeChildIndexEntry);
+                    }
                 }
                 final Collection<IndexEntry> seeAlsoChildIndexEntries = indexEntrie.getSeeAlsoChildIndexEntries();
-                for (final IndexEntry seeAlsoChildIndexEntry : seeAlsoChildIndexEntries) {
-                    existingEntry.addSeeAlsoChild(seeAlsoChildIndexEntry);
+                if (seeAlsoChildIndexEntries != null) {
+                    for (final IndexEntry seeAlsoChildIndexEntry : seeAlsoChildIndexEntries) {
+                        existingEntry.addSeeAlsoChild(seeAlsoChildIndexEntry);
+                    }
                 }
                 //supress some attributes of given entry to the existing one
                 if (indexEntrie.isRestoresPageNumber()) {
