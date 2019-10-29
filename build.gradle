@@ -54,7 +54,7 @@ task dist(type: Zip) {
         include "plugin.xml"
         expand(
                 version: project.version,
-                jar: jar.getArchiveFileName
+                jar: jar.getArchiveFileName()
         )
     }
     from("src/main/resources") {
