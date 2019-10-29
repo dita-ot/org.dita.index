@@ -146,7 +146,7 @@ public final class IndexGroupProcessor {
                     if (!key.isEmpty()) {
                         final String value = getValue(indexMap.get(key));
                         //                        final char c = value.charAt(0);
-                        logger.info(MessageUtils.getMessage("PDFJ003I", value).toString());
+                        logger.info(MessageUtils.getMessage("INDX001I", value).toString());
                         final IndexEntry entry = indexMap.remove(key);
                         group.addEntry(entry);
                     }
@@ -159,11 +159,11 @@ public final class IndexGroupProcessor {
             for (final String key : new ArrayList<>(indexMap.keySet())) {
                 if (!key.isEmpty()) {
                     final IndexEntry entry = indexMap.get(key);
-                    logger.error(MessageUtils.getMessage("PDFJ001E", entry.toString()).toString());
+                    logger.error(MessageUtils.getMessage("INDX002E", entry.toString()).toString());
                 }
             }
             if (IndexPreprocessorTask.failOnError) {
-                logger.error(MessageUtils.getMessage("PDFJ002E").toString());
+                logger.error(MessageUtils.getMessage("INDX003E").toString());
                 IndexPreprocessorTask.processingFaild = true;
             }
         }
