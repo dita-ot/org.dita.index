@@ -8,7 +8,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group = 'org.dita-ot.index'
+group = 'org.dita-ot'
 version = '1.0.0'
 description = """DITA Open Toolkit indexing plug-in."""
 
@@ -54,7 +54,7 @@ task dist(type: Zip) {
         include "plugin.xml"
         expand(
                 version: project.version,
-                jar: jar.getArchiveFileName()
+                jar: jar.archiveName
         )
     }
     from("src/main/resources") {
@@ -65,5 +65,5 @@ task dist(type: Zip) {
     from(".") {
         include "LICENSE"
     }
-    archiveName "${project.name}-${project.version}.zip"
+    archiveName "org.dita.${project.name}-${project.version}.zip"
 }
