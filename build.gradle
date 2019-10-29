@@ -1,7 +1,7 @@
 /*
  * This file is part of the DITA Open Toolkit project.
  *
- * Copyright 2015 Jarno Elovirta
+ * Copyright 2019 Jarno Elovirta
  *
  * See the accompanying LICENSE file for applicable license.
  */
@@ -30,10 +30,8 @@ sourceSets {
     main {
         resources {
             exclude 'build.xml'
-//            exclude 'catalog_template.xml'
             exclude 'messages.xml'
             exclude 'plugin.xml'
-//            exclude 'xsl/*'
         }
     }
 }
@@ -41,7 +39,7 @@ sourceSets {
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = "UTF-8"
 
-jar.setArchiveName "${project.name}.jar"
+jar.setArchiveFileName "${project.name}.jar"
 
 task copyInstall(type: Copy) {
     from(configurations.runtime.allArtifacts.files)
@@ -56,12 +54,12 @@ task dist(type: Zip) {
         include "plugin.xml"
         expand(
                 version: project.version,
-                jar: jar.archiveName
+                jar: jar.getArchiveFileName
         )
     }
     from("src/main/resources") {
         include "build.xml"
-//        include "catalog_template.xml"
+        include "index/*"
         include "messages.xml"
     }
     from(".") {
