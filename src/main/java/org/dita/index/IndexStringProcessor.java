@@ -31,54 +31,55 @@ See the accompanying LICENSE file for applicable license.
 
 package org.dita.index;
 
-import org.w3c.dom.Node;
+import static org.dita.index.IndexPreprocessor.VALUE_SEPARATOR;
 
 import java.util.Collections;
 import java.util.List;
-
-import static org.dita.index.IndexPreprocessor.VALUE_SEPARATOR;
+import org.w3c.dom.Node;
 
 public class IndexStringProcessor {
 
-    private IndexStringProcessor() {
-    }
+  private IndexStringProcessor() {}
 
-    /**
-     * Parse the index marker string and create IndexEntry object from one.
-     *
-     * @param indexMarkerString index marker string
-     * @param contents          IndexPreprocessorTask instance
-     * @return IndexEntry objects created from the index string
-     */
-    public static List<IndexEntry> processIndexString(final String indexMarkerString, final List<Node> contents) {
-        final IndexEntry indexEntry = createIndexEntry(indexMarkerString, contents, null, false);
-        final String referenceIDBuf = indexEntry.getValue() + VALUE_SEPARATOR;
-        indexEntry.addRefID(referenceIDBuf);
-        return Collections.singletonList(indexEntry);
-    }
+  /**
+   * Parse the index marker string and create IndexEntry object from one.
+   *
+   * @param indexMarkerString index marker string
+   * @param contents IndexPreprocessorTask instance
+   * @return IndexEntry objects created from the index string
+   */
+  public static List<IndexEntry> processIndexString(
+      final String indexMarkerString, final List<Node> contents) {
+    final IndexEntry indexEntry = createIndexEntry(indexMarkerString, contents, null, false);
+    final String referenceIDBuf = indexEntry.getValue() + VALUE_SEPARATOR;
+    indexEntry.addRefID(referenceIDBuf);
+    return Collections.singletonList(indexEntry);
+  }
 
-    /**
-     * Method equals to the normalize-space xslt function
-     *
-     * @param string string to normalize
-     * @return normalized string
-     */
-    public static String normalizeTextValue(final String string) {
-        if (null != string && string.length() > 0) {
-            return string.replaceAll("[\\s\\n]+", " ").trim();
-        }
-        return string;
+  /**
+   * Method equals to the normalize-space xslt function
+   *
+   * @param string string to normalize
+   * @return normalized string
+   */
+  public static String normalizeTextValue(final String string) {
+    if (null != string && string.length() > 0) {
+      return string.replaceAll("[\\s\\n]+", " ").trim();
     }
+    return string;
+  }
 
-    private static IndexEntry createIndexEntry(final String value, final List<Node> contents,
-                                               final String sortString, final boolean isParentNoPage) {
-        final IndexEntry indexEntry = new IndexEntryImpl(value, sortString, value, contents);
-        indexEntry.setSuppressesThePageNumber(isParentNoPage);
-        indexEntry.setRestoresPageNumber(false);
-        indexEntry.setStartRange(false);
-        indexEntry.setEndsRange(false);
-        indexEntry.setSortString(sortString);
-        return indexEntry;
-    }
-
+  private static IndexEntry createIndexEntry(
+      final String value,
+      final List<Node> contents,
+      final String sortString,
+      final boolean isParentNoPage) {
+    final IndexEntry indexEntry = new IndexEntryImpl(value, sortString, value, contents);
+    indexEntry.setSuppressesThePageNumber(isParentNoPage);
+    indexEntry.setRestoresPageNumber(false);
+    indexEntry.setStartRange(false);
+    indexEntry.setEndsRange(false);
+    indexEntry.setSortString(sortString);
+    return indexEntry;
+  }
 }

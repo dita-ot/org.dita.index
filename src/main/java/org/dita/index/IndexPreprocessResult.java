@@ -31,16 +31,15 @@ See the accompanying LICENSE file for applicable license.
 
 package org.dita.index;
 
+import java.util.Collection;
 import org.w3c.dom.Document;
 
-import java.util.Collection;
-
 public class IndexPreprocessResult {
-    public final Document document;
-    public final Collection<IndexEntry> indexEntries;
+  public final Document document;
+  public final Collection<IndexEntry> indexEntries;
 
-    public IndexPreprocessResult(final Document document, final Collection<IndexEntry> indexEntries) {
-        this.document = document;
-        this.indexEntries = indexEntries;
-    }
+  public IndexPreprocessResult(final Document document, final Collection<IndexEntry> indexEntries) {
+    this.document = document;
+    this.indexEntries = indexEntries;
+  }
 }

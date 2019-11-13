@@ -31,136 +31,138 @@ See the accompanying LICENSE file for applicable license.
 
 package org.dita.index.configuration;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.dita.dost.util.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class IndexConfiguration {
 
-    private static final String ELEM_INDEX_CONFIGURATION_SET = "index.configuration.set";
-    private static final String ELEM_INDEX_CONFIGURATION = "index.configuration";
-    private static final String ELEM_INDEX_GROUPS = "index.groups";
-    private static final String ELEM_INDEX_GROUP = "index.group";
-    private static final String ELEM_GROUP_KEY = "group.key";
-    private static final String ELEM_GROUP_LABEL = "group.label";
-    private static final String ELEM_GROUP_MEMBERS = "group.members";
-    private static final String ELEM_CHAR_SET = "char.set";
-    private static final String ATTR_START_RANGE = "start-range";
-    private static final String ATTR_END_RANGE = "end-range";
+  private static final String ELEM_INDEX_CONFIGURATION_SET = "index.configuration.set";
+  private static final String ELEM_INDEX_CONFIGURATION = "index.configuration";
+  private static final String ELEM_INDEX_GROUPS = "index.groups";
+  private static final String ELEM_INDEX_GROUP = "index.group";
+  private static final String ELEM_GROUP_KEY = "group.key";
+  private static final String ELEM_GROUP_LABEL = "group.label";
+  private static final String ELEM_GROUP_MEMBERS = "group.members";
+  private static final String ELEM_CHAR_SET = "char.set";
+  private static final String ATTR_START_RANGE = "start-range";
+  private static final String ATTR_END_RANGE = "end-range";
 
-    private final List<ConfigEntry> entries = new ArrayList<>();
+  private final List<ConfigEntry> entries = new ArrayList<>();
 
-    private IndexConfiguration() {
+  private IndexConfiguration() {}
+
+  public List<ConfigEntry> getEntries() {
+    return entries;
+  }
+
+  private void addEntry(final ConfigEntry entry) {
+    this.entries.add(entry);
+  }
+
+  public static IndexConfiguration parse(final Document document) throws ParseException {
+    String message = "Invalid configuration format";
+
+    final IndexConfiguration indexConfiguration = new IndexConfiguration();
+
+    final NodeList indexConfigurationSet =
+        document.getElementsByTagName(ELEM_INDEX_CONFIGURATION_SET);
+    if (indexConfigurationSet.getLength() != 1) {
+      throw new ParseException(message);
+    }
+    final Node indexConfigurationSetNode = indexConfigurationSet.item(0);
+    if (indexConfigurationSetNode == null) {
+      throw new ParseException(message);
     }
 
-    public List<ConfigEntry> getEntries() {
-        return entries;
+    final Node indexConf =
+        getFirstNodeByName(ELEM_INDEX_CONFIGURATION, indexConfigurationSetNode.getChildNodes());
+    if (indexConf == null) {
+      throw new ParseException(message);
     }
 
-    private void addEntry(final ConfigEntry entry) {
-        this.entries.add(entry);
+    final Node indexGroups = getFirstNodeByName(ELEM_INDEX_GROUPS, indexConf.getChildNodes());
+    if (indexGroups == null) {
+      throw new ParseException(message);
     }
 
-    public static IndexConfiguration parse(final Document document) throws ParseException {
-        String message = "Invalid configuration format";
+    final List<Node> indexGroupChilds = XMLUtils.toList(indexGroups.getChildNodes());
+    for (final Node node : indexGroupChilds) {
+      if (node.getNodeName().equals(ELEM_INDEX_GROUP)) {
+        final Node key = getFirstNodeByName(ELEM_GROUP_KEY, node.getChildNodes());
+        final Node label = getFirstNodeByName(ELEM_GROUP_LABEL, node.getChildNodes());
+        final Node members = getFirstNodeByName(ELEM_GROUP_MEMBERS, node.getChildNodes());
 
-        final IndexConfiguration indexConfiguration = new IndexConfiguration();
+        final String keyValue = getNodeValue(key);
+        final String labelValue = getNodeValue(label);
+        List<String> groupMembers = Collections.emptyList();
+        final List<CharRange> rangeList = new ArrayList<>();
 
-        final NodeList indexConfigurationSet = document.getElementsByTagName(ELEM_INDEX_CONFIGURATION_SET);
-        if (indexConfigurationSet.getLength() != 1) {
-            throw new ParseException(message);
-        }
-        final Node indexConfigurationSetNode = indexConfigurationSet.item(0);
-        if (indexConfigurationSetNode == null) {
-            throw new ParseException(message);
-        }
+        if (null != members && members.getChildNodes().getLength() > 0) {
+          final List<String> nodeValues = new ArrayList<>();
 
-        final Node indexConf = getFirstNodeByName(ELEM_INDEX_CONFIGURATION, indexConfigurationSetNode.getChildNodes());
-        if (indexConf == null) {
-            throw new ParseException(message);
-        }
-
-        final Node indexGroups = getFirstNodeByName(ELEM_INDEX_GROUPS, indexConf.getChildNodes());
-        if (indexGroups == null) {
-            throw new ParseException(message);
-        }
-
-        final List<Node> indexGroupChilds = XMLUtils.toList(indexGroups.getChildNodes());
-        for (final Node node : indexGroupChilds) {
-            if (node.getNodeName().equals(ELEM_INDEX_GROUP)) {
-                final Node key = getFirstNodeByName(ELEM_GROUP_KEY, node.getChildNodes());
-                final Node label = getFirstNodeByName(ELEM_GROUP_LABEL, node.getChildNodes());
-                final Node members = getFirstNodeByName(ELEM_GROUP_MEMBERS, node.getChildNodes());
-
-                final String keyValue = getNodeValue(key);
-                final String labelValue = getNodeValue(label);
-                List<String> groupMembers = Collections.emptyList();
-                final List<CharRange> rangeList = new ArrayList<>();
-
-                if (null != members && members.getChildNodes().getLength() > 0) {
-                    final List<String> nodeValues = new ArrayList<>();
-
-                    final NodeList membersChilds = members.getChildNodes();
-                    for (int j = 0; j < membersChilds.getLength(); j++) {
-                        final Node membersChild = membersChilds.item(j);
-                        if (membersChild.getNodeName().equals(ELEM_CHAR_SET)) {
-                            if (membersChild.hasAttributes() && membersChild.getAttributes() != null) {
-                                final Node startRange = membersChild.getAttributes().getNamedItem(ATTR_START_RANGE);
-                                final Node endRange = membersChild.getAttributes().getNamedItem(ATTR_END_RANGE);
-                                final String startRangeText = getNodeValue(startRange);
-                                final String endRangeText = getNodeValue(endRange);
-                                if (startRange != null && startRangeText.length() > 0 &&
-                                        endRange != null && endRangeText.length() > 0) {
-                                    final CharRange range = new CharRange(startRangeText, endRangeText);
-                                    rangeList.add(range);
-                                    nodeValues.add(startRangeText);
-                                }
-                            }
-                            final String nodeValue = getNodeValue(membersChild);
-                            if (!nodeValue.isEmpty()) {
-                                nodeValues.add(nodeValue);
-                            }
-                        }
-                    }
-                    groupMembers = nodeValues;
+          final NodeList membersChilds = members.getChildNodes();
+          for (int j = 0; j < membersChilds.getLength(); j++) {
+            final Node membersChild = membersChilds.item(j);
+            if (membersChild.getNodeName().equals(ELEM_CHAR_SET)) {
+              if (membersChild.hasAttributes() && membersChild.getAttributes() != null) {
+                final Node startRange = membersChild.getAttributes().getNamedItem(ATTR_START_RANGE);
+                final Node endRange = membersChild.getAttributes().getNamedItem(ATTR_END_RANGE);
+                final String startRangeText = getNodeValue(startRange);
+                final String endRangeText = getNodeValue(endRange);
+                if (startRange != null
+                    && startRangeText.length() > 0
+                    && endRange != null
+                    && endRangeText.length() > 0) {
+                  final CharRange range = new CharRange(startRangeText, endRangeText);
+                  rangeList.add(range);
+                  nodeValues.add(startRangeText);
                 }
-                final ConfigEntryImpl configEntry = new ConfigEntryImpl(labelValue, keyValue, groupMembers);
-                for (CharRange charRange : rangeList) {
-                    configEntry.addRange(charRange);
-                }
-                indexConfiguration.addEntry(configEntry);
+              }
+              final String nodeValue = getNodeValue(membersChild);
+              if (!nodeValue.isEmpty()) {
+                nodeValues.add(nodeValue);
+              }
             }
+          }
+          groupMembers = nodeValues;
         }
-
-        return indexConfiguration;
+        final ConfigEntryImpl configEntry = new ConfigEntryImpl(labelValue, keyValue, groupMembers);
+        for (CharRange charRange : rangeList) {
+          configEntry.addRange(charRange);
+        }
+        indexConfiguration.addEntry(configEntry);
+      }
     }
 
-    private static String getNodeValue(final Node node) {
-        if (node.getNodeType() == Node.TEXT_NODE) {
-            return node.getNodeValue().trim();
-        } else {
-            final StringBuilder res = new StringBuilder();
-            final NodeList childNodes = node.getChildNodes();
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                final String nodeValue = getNodeValue(childNodes.item(i));
-                res.append(nodeValue);
-            }
-            return res.toString().trim();
-        }
-    }
+    return indexConfiguration;
+  }
 
-    private static Node getFirstNodeByName(final String nodeName, final NodeList nodeList) {
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            final Node node = nodeList.item(i);
-            if (nodeName.equals(node.getNodeName())) {
-                return node;
-            }
-        }
-        return null;
+  private static String getNodeValue(final Node node) {
+    if (node.getNodeType() == Node.TEXT_NODE) {
+      return node.getNodeValue().trim();
+    } else {
+      final StringBuilder res = new StringBuilder();
+      final NodeList childNodes = node.getChildNodes();
+      for (int i = 0; i < childNodes.getLength(); i++) {
+        final String nodeValue = getNodeValue(childNodes.item(i));
+        res.append(nodeValue);
+      }
+      return res.toString().trim();
     }
+  }
+
+  private static Node getFirstNodeByName(final String nodeName, final NodeList nodeList) {
+    for (int i = 0; i < nodeList.getLength(); i++) {
+      final Node node = nodeList.item(i);
+      if (nodeName.equals(node.getNodeName())) {
+        return node;
+      }
+    }
+    return null;
+  }
 }

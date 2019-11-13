@@ -36,19 +36,19 @@ import java.util.Locale;
 
 public class IndexCollator {
 
-    private Comparator collator;
+  private Comparator collator;
 
-    public IndexCollator(final Locale locale) {
-        try {
-            collator = com.ibm.icu.text.Collator.getInstance(locale);
-        } catch (final NoClassDefFoundError ex) {
-            System.out.println("[INFO] IBM ICU4J Collator is not found. Default Java Collator will be used");
-            collator = java.text.Collator.getInstance(locale);
-        }
+  public IndexCollator(final Locale locale) {
+    try {
+      collator = com.ibm.icu.text.Collator.getInstance(locale);
+    } catch (final NoClassDefFoundError ex) {
+      System.out.println(
+          "[INFO] IBM ICU4J Collator is not found. Default Java Collator will be used");
+      collator = java.text.Collator.getInstance(locale);
     }
+  }
 
-    public int compare(final Object o1, final Object o2) {
-        return collator.compare(o1, o2);
-    }
-
+  public int compare(final Object o1, final Object o2) {
+    return collator.compare(o1, o2);
+  }
 }

@@ -31,29 +31,25 @@ See the accompanying LICENSE file for applicable license.
 
 package org.dita.index.configuration;
 
-import org.dita.index.IndexCollator;
-
 import java.util.List;
+import org.dita.index.IndexCollator;
 
 public interface ConfigEntry {
 
-    /**
-     * @return group label
-     */
-    String getLabel();
+  /** @return group label */
+  String getLabel();
 
-    /**
-     * @return group key. this key is being used to check if some string belongs to this group by comparing it with
-     * two keys of near by config entries
-     */
-    String getKey();
+  /**
+   * @return group key. this key is being used to check if some string belongs to this group by
+   *     comparing it with two keys of near by config entries
+   */
+  String getKey();
 
-    /**
-     * @return specifies group member characters. The meaning of these characters is that if some string starts with the
-     * character from this array then it(string) belongs to this group
-     */
-    List<String> getGroupMembers();
+  /**
+   * @return specifies group member characters. The meaning of these characters is that if some
+   *     string starts with the character from this array then it(string) belongs to this group
+   */
+  List<String> getGroupMembers();
 
-    boolean isInRange(String value, IndexCollator collator);
-
+  boolean isInRange(String value, IndexCollator collator);
 }

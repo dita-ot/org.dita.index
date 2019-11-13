@@ -32,58 +32,56 @@ See the accompanying LICENSE file for applicable license.
 package org.dita.index.configuration;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.dita.index.IndexCollator;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.dita.index.IndexCollator;
 
 @VisibleForTesting
 public class ConfigEntryImpl implements ConfigEntry {
-    private final String label;
-    private final String key;
-    private final List<String> members;
-    private final List<CharRange> ranges = new ArrayList<>();
+  private final String label;
+  private final String key;
+  private final List<String> members;
+  private final List<CharRange> ranges = new ArrayList<>();
 
-    public ConfigEntryImpl(final String label, final String key, final List<String> members) {
-        this.label = label;
-        this.key = key;
-        this.members = members;
-    }
+  public ConfigEntryImpl(final String label, final String key, final List<String> members) {
+    this.label = label;
+    this.key = key;
+    this.members = members;
+  }
 
-    public void addRange(final CharRange range) {
-        ranges.add(range);
-    }
+  public void addRange(final CharRange range) {
+    ranges.add(range);
+  }
 
-    @Override
-    public String getLabel() {
-        return this.label;
-    }
+  @Override
+  public String getLabel() {
+    return this.label;
+  }
 
-    @Override
-    public String getKey() {
-        return this.key;
-    }
+  @Override
+  public String getKey() {
+    return this.key;
+  }
 
-    @Override
-    public List<String> getGroupMembers() {
-        return this.members;
-    }
+  @Override
+  public List<String> getGroupMembers() {
+    return this.members;
+  }
 
-    @Override
-    public boolean isInRange(final String value, final IndexCollator collator) {
-        if (!value.isEmpty()) {
-            for (final String member : members) {
-                if (value.startsWith(member) || member.startsWith(value)) {
-                    return true;
-                }
-            }
-            for (final CharRange range : ranges) {
-                if (range.isInRange(value, collator)) {
-                    return true;
-                }
-            }
+  @Override
+  public boolean isInRange(final String value, final IndexCollator collator) {
+    if (!value.isEmpty()) {
+      for (final String member : members) {
+        if (value.startsWith(member) || member.startsWith(value)) {
+          return true;
         }
-        return false;
+      }
+      for (final CharRange range : ranges) {
+        if (range.isInRange(value, collator)) {
+          return true;
+        }
+      }
     }
-
+    return false;
+  }
 }

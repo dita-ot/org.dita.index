@@ -31,265 +31,264 @@ See the accompanying LICENSE file for applicable license.
 
 package org.dita.index;
 
-import org.w3c.dom.Node;
-
-import java.util.*;
-
 import static java.util.Collections.emptyList;
 
-/**
- * Mutable index entry.
- */
+import java.util.*;
+import org.w3c.dom.Node;
+
+/** Mutable index entry. */
 public class IndexEntryImpl implements IndexEntry {
 
-    private final String value;
-    private final String formattedString;
-    private final List<Node> contents;
-    private String sortString;
+  private final String value;
+  private final String formattedString;
+  private final List<Node> contents;
+  private String sortString;
 
-    private final Map<String, IndexEntry> childs = new HashMap<>();
-    private final Map<String, IndexEntry> seeChilds = new HashMap<>();
-    private final Map<String, IndexEntry> seeAlsoChilds = new HashMap<>();
+  private final Map<String, IndexEntry> childs = new HashMap<>();
+  private final Map<String, IndexEntry> seeChilds = new HashMap<>();
+  private final Map<String, IndexEntry> seeAlsoChilds = new HashMap<>();
 
-    private boolean startRange = false;
-    private boolean endsRange = false;
-    private boolean suppressesThePageNumber = false;
-    private boolean restoresPageNumber = false;
+  private boolean startRange = false;
+  private boolean endsRange = false;
+  private boolean suppressesThePageNumber = false;
+  private boolean restoresPageNumber = false;
 
-    private final Set<String> refIDs = new HashSet<>();
+  private final Set<String> refIDs = new HashSet<>();
 
-    /**
-     * Index entry constructor.
-     *
-     * @param value           string value
-     * @param sortString      sort-as value
-     * @param formattedString formatter string value
-     * @param contents        markup value, may be {@code null}
-     */
-    public IndexEntryImpl(final String value, final String sortString,
-                          final String formattedString, final List<Node> contents) {
-        this.value = value;
-        this.sortString = sortString;
-        this.formattedString = formattedString;
-        this.contents = contents;
+  /**
+   * Index entry constructor.
+   *
+   * @param value string value
+   * @param sortString sort-as value
+   * @param formattedString formatter string value
+   * @param contents markup value, may be {@code null}
+   */
+  public IndexEntryImpl(
+      final String value,
+      final String sortString,
+      final String formattedString,
+      final List<Node> contents) {
+    this.value = value;
+    this.sortString = sortString;
+    this.formattedString = formattedString;
+    this.contents = contents;
+  }
+
+  @Override
+  public Set<String> getRefIDs() {
+    return refIDs;
+  }
+
+  @Override
+  public String getValue() {
+    return value;
+  }
+
+  @Override
+  public String getFormattedString() {
+    return formattedString;
+  }
+
+  @Override
+  public List<Node> getContents() {
+    return contents;
+  }
+
+  @Override
+  public String getSortString() {
+    return sortString;
+  }
+
+  @Override
+  public List<IndexEntry> getChildIndexEntries() {
+    return childs.isEmpty() ? emptyList() : new ArrayList(childs.values());
+  }
+
+  @Override
+  public boolean isStartingRange() {
+    return startRange;
+  }
+
+  @Override
+  public boolean isEndingRange() {
+    return endsRange;
+  }
+
+  @Override
+  public boolean isSuppressesThePageNumber() {
+    return suppressesThePageNumber;
+  }
+
+  @Override
+  public boolean isRestoresPageNumber() {
+    return restoresPageNumber;
+  }
+
+  @Override
+  public void addRefID(final String id) {
+    refIDs.add(id);
+  }
+
+  @Override
+  public void addSeeChild(final IndexEntry entry) {
+    final String entryValue = entry.getValue();
+    if (!seeChilds.containsKey(entryValue)) {
+      seeChilds.put(entryValue, entry);
+      return;
+    }
+    // The index with same value already exists
+    // Add seeChilds of given entry to existing entry
+    final IndexEntry existingEntry = seeChilds.get(entryValue);
+
+    final List<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
+    for (final IndexEntry childIndexEntry : childIndexEntries) {
+      existingEntry.addChild(childIndexEntry);
+    }
+    // supress some attributes of given entry to the existing one
+    if (entry.isRestoresPageNumber()) {
+      existingEntry.setRestoresPageNumber(true);
+    }
+    if (!entry.isSuppressesThePageNumber()) {
+      existingEntry.setSuppressesThePageNumber(false);
+    }
+    if (entry.isStartingRange()) {
+      existingEntry.setStartRange(true);
+    }
+    if (entry.getSortString() != null) {
+      existingEntry.setSortString(entry.getSortString());
+    }
+  }
+
+  @Override
+  public void addSeeAlsoChild(final IndexEntry entry) {
+    final String entryValue = entry.getValue();
+    if (!seeAlsoChilds.containsKey(entryValue)) {
+      seeAlsoChilds.put(entryValue, entry);
+      return;
+    }
+    // The index with same value already exists
+    // Add seeAlsoChilds of given entry to existing entry
+    final IndexEntry existingEntry = seeAlsoChilds.get(entryValue);
+
+    final Collection<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
+    for (final IndexEntry childIndexEntry : childIndexEntries) {
+      existingEntry.addChild(childIndexEntry);
+    }
+    // supress some attributes of given entry to the existing one
+    if (entry.isRestoresPageNumber()) {
+      existingEntry.setRestoresPageNumber(true);
+    }
+    if (!entry.isSuppressesThePageNumber()) {
+      existingEntry.setSuppressesThePageNumber(false);
+    }
+    if (entry.isStartingRange()) {
+      existingEntry.setStartRange(true);
+    }
+    if (entry.getSortString() != null) {
+      existingEntry.setSortString(entry.getSortString());
+    }
+  }
+
+  @Override
+  public void addChild(final IndexEntry entry) {
+    final String entryValue = entry.getValue();
+    if (!childs.containsKey(entryValue)) {
+      childs.put(entryValue, entry);
+      return;
+    }
+    // The index with same value already exists
+    // Add childs of given entry to existing entry
+    final IndexEntry existingEntry = childs.get(entryValue);
+
+    final Collection<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
+    for (final IndexEntry childIndexEntry : childIndexEntries) {
+      existingEntry.addChild(childIndexEntry);
+    }
+    // supress some attributes of given entry to the existing one
+    if (entry.isRestoresPageNumber()) {
+      existingEntry.setRestoresPageNumber(true);
+    }
+    if (!entry.isSuppressesThePageNumber()) {
+      existingEntry.setSuppressesThePageNumber(false);
+    }
+    if (entry.isStartingRange()) {
+      existingEntry.setStartRange(true);
+    }
+    if (entry.getSortString() != null) {
+      existingEntry.setSortString(entry.getSortString());
+    }
+  }
+
+  @Override
+  public void setSortString(final String sortString) {
+    this.sortString = sortString;
+  }
+
+  @Override
+  public void setStartRange(final boolean startRange) {
+    if (startRange && endsRange) {
+      endsRange = false;
+    }
+    this.startRange = startRange;
+  }
+
+  @Override
+  public void setEndsRange(final boolean endsRange) {
+    if (endsRange && startRange) {
+      startRange = false;
+    }
+    this.endsRange = endsRange;
+  }
+
+  @Override
+  public void setSuppressesThePageNumber(final boolean suppressesThePageNumber) {
+    if (suppressesThePageNumber && restoresPageNumber) {
+      restoresPageNumber = false;
     }
 
-    @Override
-    public Set<String> getRefIDs() {
-        return refIDs;
+    this.suppressesThePageNumber = suppressesThePageNumber;
+  }
+
+  @Override
+  public void setRestoresPageNumber(final boolean restoresPageNumber) {
+    if (restoresPageNumber && suppressesThePageNumber) {
+      suppressesThePageNumber = false;
     }
+    this.restoresPageNumber = restoresPageNumber;
+  }
 
-    @Override
-    public String getValue() {
-        return value;
+  // FIXME this should return an empty list of no values, but it will lead to incorrect output
+  //  and we don't have a test for it
+  @Override
+  public List<IndexEntry> getSeeChildIndexEntries() {
+    return seeChilds.isEmpty() ? null : new ArrayList(seeChilds.values());
+  }
+
+  // FIXME this should return an empty list of no values, but it will lead to incorrect output
+  //  and we don't have a test for it
+  @Override
+  public List<IndexEntry> getSeeAlsoChildIndexEntries() {
+    return seeAlsoChilds.isEmpty() ? null : new ArrayList(seeAlsoChilds.values());
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder result = new StringBuilder(getValue());
+    if (isSuppressesThePageNumber()) {
+      result.append("<$nopage>");
     }
-
-    @Override
-    public String getFormattedString() {
-        return formattedString;
+    if (isRestoresPageNumber()) {
+      result.append("<$singlepage>");
     }
-
-    @Override
-    public List<Node> getContents() {
-        return contents;
+    if (isStartingRange()) {
+      result.append("<$startrange>");
     }
-
-    @Override
-    public String getSortString() {
-        return sortString;
+    if (isEndingRange()) {
+      result.append("<$endrange>");
     }
-
-    @Override
-    public List<IndexEntry> getChildIndexEntries() {
-        return childs.isEmpty() ? emptyList() : new ArrayList(childs.values());
+    if (getSortString() != null && getSortString().length() > 0) {
+      result.append("[").append(getSortString()).append("]");
     }
-
-    @Override
-    public boolean isStartingRange() {
-        return startRange;
-    }
-
-    @Override
-    public boolean isEndingRange() {
-        return endsRange;
-    }
-
-    @Override
-    public boolean isSuppressesThePageNumber() {
-        return suppressesThePageNumber;
-    }
-
-    @Override
-    public boolean isRestoresPageNumber() {
-        return restoresPageNumber;
-    }
-
-    @Override
-    public void addRefID(final String id) {
-        refIDs.add(id);
-    }
-
-    @Override
-    public void addSeeChild(final IndexEntry entry) {
-        final String entryValue = entry.getValue();
-        if (!seeChilds.containsKey(entryValue)) {
-            seeChilds.put(entryValue, entry);
-            return;
-        }
-        //The index with same value already exists
-        //Add seeChilds of given entry to existing entry
-        final IndexEntry existingEntry = seeChilds.get(entryValue);
-
-        final List<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
-        for (final IndexEntry childIndexEntry : childIndexEntries) {
-            existingEntry.addChild(childIndexEntry);
-        }
-        //supress some attributes of given entry to the existing one
-        if (entry.isRestoresPageNumber()) {
-            existingEntry.setRestoresPageNumber(true);
-        }
-        if (!entry.isSuppressesThePageNumber()) {
-            existingEntry.setSuppressesThePageNumber(false);
-        }
-        if (entry.isStartingRange()) {
-            existingEntry.setStartRange(true);
-        }
-        if (entry.getSortString() != null) {
-            existingEntry.setSortString(entry.getSortString());
-        }
-    }
-
-    @Override
-    public void addSeeAlsoChild(final IndexEntry entry) {
-        final String entryValue = entry.getValue();
-        if (!seeAlsoChilds.containsKey(entryValue)) {
-            seeAlsoChilds.put(entryValue, entry);
-            return;
-        }
-        //The index with same value already exists
-        //Add seeAlsoChilds of given entry to existing entry
-        final IndexEntry existingEntry = seeAlsoChilds.get(entryValue);
-
-        final Collection<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
-        for (final IndexEntry childIndexEntry : childIndexEntries) {
-            existingEntry.addChild(childIndexEntry);
-        }
-        //supress some attributes of given entry to the existing one
-        if (entry.isRestoresPageNumber()) {
-            existingEntry.setRestoresPageNumber(true);
-        }
-        if (!entry.isSuppressesThePageNumber()) {
-            existingEntry.setSuppressesThePageNumber(false);
-        }
-        if (entry.isStartingRange()) {
-            existingEntry.setStartRange(true);
-        }
-        if (entry.getSortString() != null) {
-            existingEntry.setSortString(entry.getSortString());
-        }
-    }
-
-    @Override
-    public void addChild(final IndexEntry entry) {
-        final String entryValue = entry.getValue();
-        if (!childs.containsKey(entryValue)) {
-            childs.put(entryValue, entry);
-            return;
-        }
-        //The index with same value already exists
-        //Add childs of given entry to existing entry
-        final IndexEntry existingEntry = childs.get(entryValue);
-
-        final Collection<IndexEntry> childIndexEntries = entry.getChildIndexEntries();
-        for (final IndexEntry childIndexEntry : childIndexEntries) {
-            existingEntry.addChild(childIndexEntry);
-        }
-        //supress some attributes of given entry to the existing one
-        if (entry.isRestoresPageNumber()) {
-            existingEntry.setRestoresPageNumber(true);
-        }
-        if (!entry.isSuppressesThePageNumber()) {
-            existingEntry.setSuppressesThePageNumber(false);
-        }
-        if (entry.isStartingRange()) {
-            existingEntry.setStartRange(true);
-        }
-        if (entry.getSortString() != null) {
-            existingEntry.setSortString(entry.getSortString());
-        }
-    }
-
-    @Override
-    public void setSortString(final String sortString) {
-        this.sortString = sortString;
-    }
-
-    @Override
-    public void setStartRange(final boolean startRange) {
-        if (startRange && endsRange) {
-            endsRange = false;
-        }
-        this.startRange = startRange;
-    }
-
-    @Override
-    public void setEndsRange(final boolean endsRange) {
-        if (endsRange && startRange) {
-            startRange = false;
-        }
-        this.endsRange = endsRange;
-    }
-
-    @Override
-    public void setSuppressesThePageNumber(final boolean suppressesThePageNumber) {
-        if (suppressesThePageNumber && restoresPageNumber) {
-            restoresPageNumber = false;
-        }
-
-        this.suppressesThePageNumber = suppressesThePageNumber;
-    }
-
-    @Override
-    public void setRestoresPageNumber(final boolean restoresPageNumber) {
-        if (restoresPageNumber && suppressesThePageNumber) {
-            suppressesThePageNumber = false;
-        }
-        this.restoresPageNumber = restoresPageNumber;
-    }
-
-    // FIXME this should return an empty list of no values, but it will lead to incorrect output
-    //  and we don't have a test for it
-    @Override
-    public List<IndexEntry> getSeeChildIndexEntries() {
-        return seeChilds.isEmpty() ? null : new ArrayList(seeChilds.values());
-    }
-
-    // FIXME this should return an empty list of no values, but it will lead to incorrect output
-    //  and we don't have a test for it
-    @Override
-    public List<IndexEntry> getSeeAlsoChildIndexEntries() {
-        return seeAlsoChilds.isEmpty() ? null : new ArrayList(seeAlsoChilds.values());
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder result = new StringBuilder(getValue());
-        if (isSuppressesThePageNumber()) {
-            result.append("<$nopage>");
-        }
-        if (isRestoresPageNumber()) {
-            result.append("<$singlepage>");
-        }
-        if (isStartingRange()) {
-            result.append("<$startrange>");
-        }
-        if (isEndingRange()) {
-            result.append("<$endrange>");
-        }
-        if (getSortString() != null && getSortString().length() > 0) {
-            result.append("[").append(getSortString()).append("]");
-        }
-        return result.toString();
-    }
-
+    return result.toString();
+  }
 }

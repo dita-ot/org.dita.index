@@ -33,8 +33,7 @@ package org.dita.index.configuration;
 
 public class ParseException extends Exception {
 
-    public ParseException(final String message) {
-        super(message);
-    }
-
+  public ParseException(final String message) {
+    super(message);
+  }
 }

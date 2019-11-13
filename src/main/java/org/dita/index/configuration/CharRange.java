@@ -12,15 +12,15 @@ import org.dita.index.IndexCollator;
 
 class CharRange {
 
-    private final String start;
-    private final String end;
+  private final String start;
+  private final String end;
 
-    public CharRange(final String start, final String end) {
-        this.start = start;
-        this.end = end;
-    }
+  public CharRange(final String start, final String end) {
+    this.start = start;
+    this.end = end;
+  }
 
-    public boolean isInRange(final String value, final IndexCollator collator) {
-        return (collator.compare(value, start) > 0) && (collator.compare(value, end) < 0);
-    }
+  public boolean isInRange(final String value, final IndexCollator collator) {
+    return (collator.compare(value, start) > 0) && (collator.compare(value, end) < 0);
+  }
 }

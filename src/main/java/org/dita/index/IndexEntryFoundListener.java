@@ -32,10 +32,10 @@ See the accompanying LICENSE file for applicable license.
 package org.dita.index;
 
 interface IndexEntryFoundListener {
-    /**
-     * Notifies that the new index entry was found
-     *
-     * @param entry index entry
-     */
-    void foundEntry(IndexEntry entry);
+  /**
+   * Notifies that the new index entry was found
+   *
+   * @param entry index entry
+   */
+  void foundEntry(IndexEntry entry);
 }

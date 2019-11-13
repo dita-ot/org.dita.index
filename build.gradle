@@ -5,6 +5,10 @@
  *
  * See the accompanying LICENSE file for applicable license.
  */
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.26.0"
+}
+
 apply plugin: 'java'
 apply plugin: 'maven'
 
@@ -66,4 +70,10 @@ task dist(type: Zip) {
         include "LICENSE"
     }
     archiveName "org.dita.${project.name}-${project.version}.zip"
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+    }
 }

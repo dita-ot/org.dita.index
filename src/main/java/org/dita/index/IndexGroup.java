@@ -33,25 +33,19 @@ package org.dita.index;
 
 import java.util.Collection;
 
-/**
- * Mutable index group.
- */
+/** Mutable index group. */
 interface IndexGroup {
 
-    /**
-     * @return group label
-     */
-    String getLabel();
+  /** @return group label */
+  String getLabel();
 
-    /**
-     * @return group entries
-     */
-    Collection<IndexEntry> getEntries();
+  /** @return group entries */
+  Collection<IndexEntry> getEntries();
 
-    /**
-     * Adds entry to the index group
-     *
-     * @param entry index entry
-     */
-    void addEntry(IndexEntry entry);
+  /**
+   * Adds entry to the index group
+   *
+   * @param entry index entry
+   */
+  void addEntry(IndexEntry entry);
 }

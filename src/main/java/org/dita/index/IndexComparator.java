@@ -36,23 +36,23 @@ import java.util.Locale;
 
 class IndexComparator implements Comparator<IndexEntry> {
 
-    private final IndexCollator collator;
+  private final IndexCollator collator;
 
-    public IndexComparator(final Locale locale) {
-        this.collator = new IndexCollator(locale);
-    }
+  public IndexComparator(final Locale locale) {
+    this.collator = new IndexCollator(locale);
+  }
 
-    public int compare(final IndexEntry o1, final IndexEntry o2) {
-        final String value1 = getSortString(o1);
-        final String value2 = getSortString(o2);
-        return collator.compare(value1, value2);
-    }
+  public int compare(final IndexEntry o1, final IndexEntry o2) {
+    final String value1 = getSortString(o1);
+    final String value2 = getSortString(o2);
+    return collator.compare(value1, value2);
+  }
 
-    private String getSortString(final IndexEntry entry) {
-        if (entry.getSortString() != null) {
-            return entry.getSortString();
-        } else {
-            return entry.getValue();
-        }
+  private String getSortString(final IndexEntry entry) {
+    if (entry.getSortString() != null) {
+      return entry.getSortString();
+    } else {
+      return entry.getValue();
     }
+  }
 }
