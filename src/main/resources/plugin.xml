@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin id="org.dita.index" version="${version}">
   <feature extension="dita.conductor.lib.import" file="lib/${jar}"/>
+  <feature extension="dita.conductor.lib.import" file="lib/icu4j-localespi-65.1.jar"/>
   <feature extension="dita.xsl.messages" file="messages.xml"/>
   <feature extension="ant.import" file="build.xml"/>
   <feature extension="depend.org.dita.pdf2.index" value="org.dita.index"/>

@@ -31,20 +31,26 @@ See the accompanying LICENSE file for applicable license.
 
 package org.dita.index;
 
+import java.text.Collator;
+import java.text.spi.CollatorProvider;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.ServiceLoader;
 
 public class IndexCollator {
 
   private Comparator collator;
 
   public IndexCollator(final Locale locale) {
-    try {
-      collator = com.ibm.icu.text.Collator.getInstance(locale);
-    } catch (final NoClassDefFoundError ex) {
-      System.out.println(
-          "[INFO] IBM ICU4J Collator is not found. Default Java Collator will be used");
-      collator = java.text.Collator.getInstance(locale);
+    final ServiceLoader<CollatorProvider> providers = ServiceLoader.load(CollatorProvider.class);
+    for (final CollatorProvider provider : providers) {
+      if (provider.isSupportedLocale(locale)) {
+        collator = provider.getInstance(locale);
+        break;
+      }
+    }
+    if (collator == null) {
+      collator = Collator.getInstance(locale);
     }
   }
 
