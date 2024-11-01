@@ -1,7 +1,9 @@
-name: Test
+name: Release
 
-on: [push]
-
+on:
+  push:
+    tags:
+      - "*"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,4 +16,9 @@ jobs:
         java-version: '17'
         cache: 'gradle'
     - name: Build with Gradle
-      run: ./gradlew build --no-daemon
+      run: ./gradlew dist --no-daemon
+    - name: Deploy distribution package to releases
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          build/distributions/*.zip  
