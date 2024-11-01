@@ -38,6 +38,8 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Locale;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -47,7 +49,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.dita.dost.log.DITAOTAntLogger;
-import org.dita.dost.util.XMLUtils;
 import org.dita.index.configuration.IndexConfiguration;
 import org.dita.index.configuration.ParseException;
 import org.w3c.dom.Document;
@@ -71,7 +72,14 @@ public class IndexPreprocessorTask extends Task {
   public void execute() throws BuildException {
     checkParameters();
 
-    final DocumentBuilder documentBuilder = XMLUtils.getDocumentBuilder();
+    final DocumentBuilder documentBuilder;
+    try {
+      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setNamespaceAware(true);
+      documentBuilder = factory.newDocumentBuilder();
+    } catch (ParserConfigurationException e) {
+      throw new BuildException(e);
+    }
 
     final Document doc;
     try {

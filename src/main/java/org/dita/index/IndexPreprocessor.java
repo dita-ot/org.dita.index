@@ -35,7 +35,6 @@ import static javax.xml.XMLConstants.XMLNS_ATTRIBUTE;
 import static org.dita.dost.util.Constants.*;
 
 import java.util.*;
-import javax.xml.parsers.DocumentBuilder;
 import org.dita.dost.log.DITAOTLogger;
 import org.dita.dost.util.XMLUtils;
 import org.dita.index.configuration.IndexConfiguration;
@@ -101,8 +100,7 @@ public final class IndexPreprocessor {
    * @return read index terms
    */
   IndexPreprocessResult process(final Document input) {
-    final DocumentBuilder documentBuilder = XMLUtils.getDocumentBuilder();
-    final Document doc = documentBuilder.newDocument();
+    final Document doc = input.getImplementation().createDocument(null, null, null);
     final Node rootElement = input.getDocumentElement();
     final List<IndexEntry> indexes = new ArrayList<>();
     final Node node = processCurrNode(rootElement, doc, indexes::add).get(0);
