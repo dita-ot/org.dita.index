@@ -1,11 +1,11 @@
-# DITA-OT Index plug-in [![badge]](https://github.com/dita-ot/org.dita.index/actions?workflow=Java+CI)
+# DITA-OT Index plug-in [![badge]](https://github.com/dita-ot/org.dita.index/actions?workflow=Test)
 
 ## Installation
 
 Run the plug-in installation command:
 
 ```shell
-dita --install org.dita.index
+dita install org.dita.index
 ```
 
 ## License

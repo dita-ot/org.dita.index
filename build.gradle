@@ -10,24 +10,35 @@ plugins {
 }
 
 apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 group = 'org.dita-ot'
-version = '1.0.0'
+version = '2.0.0'
 description = """DITA Open Toolkit indexing plug-in."""
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 17
+targetCompatibility = 17
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 dependencies {
-    compile group: 'org.dita-ot', name: 'dost', version: '[2.1,)'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.xmlunit', name: 'xmlunit-core', version: '2.6.3'
-    testCompile group: 'org.xmlunit', name: 'xmlunit-matchers', version: '2.6.3'
+    implementation group: 'org.apache.ant', name: 'ant', version: '1.10.14'
+    implementation(group: 'com.google.guava', name: 'guava', version: '32.1.1-jre') {
+        exclude group: 'org.checkerframework', module: 'checker-qual'
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        exclude group: 'com.google.guava', module: 'failureaccess'
+        exclude group: 'com.google.guava', module: 'listenablefuture'
+        exclude group: 'com.google.errorprone', module: 'error_prone_annotations'
+        exclude group: 'com.google.j2objc', module: 'j2objc-annotations'
+    }
+    implementation group: 'net.sf.saxon', name: 'Saxon-HE', version: '12.4'
+    implementation group: 'com.ibm.icu', name: 'icu4j', version: '74.2'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.12'
+    implementation group: 'org.dita-ot', name: 'dost', version: '4.0.1'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'org.xmlunit', name: 'xmlunit-core', version: '2.6.3'
+    testImplementation group: 'org.xmlunit', name: 'xmlunit-matchers', version: '2.6.3'
 }
 
 sourceSets {
@@ -46,12 +57,12 @@ compileTestJava.options.encoding = "UTF-8"
 jar.setArchiveFileName "${project.name}.jar"
 
 task copyInstall(type: Copy) {
-    from(configurations.runtime.allArtifacts.files)
+    from(tasks.jar.outputs.files)
     destinationDir = file("lib")
 }
 
 task dist(type: Zip) {
-    from(configurations.runtime.allArtifacts.files) {
+    from(tasks.jar.outputs.files) {
         into "lib"
     }
     from("src/main/resources") {
